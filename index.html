@@ -73,8 +73,8 @@
           <li class="nav-item"><a class="nav-link" href="#cotizador">{{ t.nav.quote }}</a></li>
           <li class="nav-item"><a class="nav-link" href="#cv">{{ t.nav.cv }}</a></li>
           <li class="nav-item ms-lg-2">
-            <button type="button" class="theme-toggle" ng-click="toggleLang()" aria-label="Cambiar idioma" title="Español / English">
-              <span class="lang-label">{{ lang === 'en' ? 'ES' : 'EN' }}</span>
+            <button type="button" class="theme-toggle lang-toggle" ng-click="toggleLang()" aria-label="Cambiar idioma" title="Español / English">
+              <i class="bi bi-translate"></i><span class="lang-label">{{ lang === 'en' ? 'ES' : 'EN' }}</span>
             </button>
           </li>
           <li class="nav-item ms-lg-2">
@@ -135,7 +135,7 @@
       <div class="row align-items-center g-5">
         <div class="col-lg-5 reveal">
           <div class="about-photo">
-            <img src="assets/img/sobre-mi.jpg" alt="Alberto Lira"
+            <img src="assets/img/sobre-mi.png" alt="Ilustración de Alberto Lira programando"
               onerror="this.parentNode.classList.add('photo-fallback'); this.remove();" />
             <div class="photo-badge"><i class="bi bi-patch-check-fill"></i> {{ profile.experienceYears }} {{ t.about.badge }}</div>
           </div>

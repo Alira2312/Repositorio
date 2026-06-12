@@ -114,6 +114,8 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, .form-control:focus-v
 }
 .theme-toggle:hover { background: var(--accent); border-color: var(--accent); color: #20180a; transform: rotate(12deg); }
 .theme-toggle .lang-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.5px; }
+.lang-toggle { width: auto; padding: 0 0.8rem; gap: 0.35rem; }
+.lang-toggle .bi { font-size: 0.95rem; }
 .theme-toggle:hover { transform: none; }
 .theme-toggle:hover .bi { transform: rotate(12deg); display: inline-block; }
 
