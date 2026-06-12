@@ -445,11 +445,18 @@
                   <label class="form-label">{{ t.contact.message }}</label>
                   <textarea class="form-control" rows="5" name="message" ng-model="form.message" required ng-class="{'is-invalid': contactForm.message.$invalid && submitted}"></textarea>
                 </div>
+                <input type="checkbox" name="botcheck" ng-model="form.botcheck" class="d-none" tabindex="-1" autocomplete="off" aria-hidden="true" />
                 <div class="col-12">
-                  <button type="submit" class="btn btn-accent btn-lg w-100"><i class="bi bi-send-fill me-2"></i> {{ t.contact.send }}</button>
+                  <button type="submit" class="btn btn-accent btn-lg w-100" ng-disabled="sending">
+                    <i class="bi" ng-class="sending ? 'bi-hourglass-split' : 'bi-send-fill'"></i>
+                    <span class="ms-2">{{ sending ? t.contact.sending : t.contact.send }}</span>
+                  </button>
                 </div>
                 <div class="col-12" ng-if="sent">
                   <div class="alert alert-success mb-0"><i class="bi bi-check-circle-fill me-2"></i>{{ sentMessage }}</div>
+                </div>
+                <div class="col-12" ng-if="sendError">
+                  <div class="alert alert-danger mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>{{ t.contact.err }}</div>
                 </div>
               </div>
             </form>

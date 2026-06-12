@@ -8,7 +8,7 @@
   var pendingGame = 'tetris';   // juego elegido al abrir el modal (compartido controller/initUI)
 
   angular.module('portfolioApp', [])
-    .controller('MainController', ['$scope', '$window', '$timeout', function ($scope, $window, $timeout) {
+    .controller('MainController', ['$scope', '$window', '$timeout', '$http', function ($scope, $window, $timeout, $http) {
 
       var data = $window.PORTFOLIO_DATA || {};
       var contact = data.contact || {};
@@ -94,10 +94,8 @@
       };
 
       // ---- Formulario de contacto ----
-      $scope.form = {}; $scope.submitted = false; $scope.sent = false;
-      $scope.sendMessage = function (isValid) {
-        $scope.submitted = true;
-        if (!isValid) { return; }
+      $scope.form = {}; $scope.submitted = false; $scope.sent = false; $scope.sending = false; $scope.sendError = false;
+      function mailtoFallback() {
         var subject = encodeURIComponent('[Portafolio] ' + ($scope.form.subject || 'Contacto'));
         var body = encodeURIComponent(
           ($scope.t.contact.name) + ': ' + ($scope.form.name || '') + '\n' +
@@ -105,11 +103,42 @@
           ($scope.form.message || '')
         );
         $window.location.href = 'mailto:' + (contact.email || '') + '?subject=' + subject + '&body=' + body;
-        $scope.sent = true;
-        $scope.sentMessage = ($scope.lang === 'en')
-          ? 'Thanks, ' + ($scope.form.name || '') + '! Your email app opened to send the message.'
-          : '¡Gracias, ' + ($scope.form.name || '') + '! Se abrió tu correo para enviar el mensaje.';
-        $scope.form = {}; $scope.submitted = false;
+      }
+      $scope.sendMessage = function (isValid) {
+        $scope.submitted = true; $scope.sendError = false;
+        if (!isValid) { return; }
+
+        // Si NO hay Access Key configurada -> respaldo: abre el correo del visitante.
+        if (!contact.formAccessKey) {
+          mailtoFallback();
+          $scope.sent = true;
+          $scope.sentMessage = ($scope.lang === 'en')
+            ? 'Your email app opened to send the message.'
+            : 'Se abrió tu correo para enviar el mensaje.';
+          $scope.form = {}; $scope.submitted = false;
+          return;
+        }
+
+        // Con Access Key -> envía a tu correo vía Web3Forms (sin servidor).
+        $scope.sending = true;
+        $http.post('https://api.web3forms.com/submit', {
+          access_key: contact.formAccessKey,
+          subject: '[Portafolio] ' + ($scope.form.subject || 'Contacto'),
+          from_name: 'Portafolio — ' + ($scope.form.name || ''),
+          name: $scope.form.name,
+          email: $scope.form.email,
+          message: $scope.form.message,
+          botcheck: $scope.form.botcheck || ''   // honeypot anti-spam
+        }).then(function (res) {
+          $scope.sending = false;
+          if (res.data && res.data.success) {
+            $scope.sent = true;
+            $scope.sentMessage = $scope.t.contact.ok;
+            $scope.form = {}; $scope.submitted = false;
+          } else { $scope.sendError = true; }
+        }, function () {
+          $scope.sending = false; $scope.sendError = true;
+        });
       };
 
       // ---- Tema claro/oscuro ----

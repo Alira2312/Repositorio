@@ -18,6 +18,11 @@ window.PORTFOLIO_DATA = {
     linkedin: '',                              // sin LinkedIn (se oculta el ícono)
     experienceYears: '4',
     age: 27,
+    // Formulario de contacto → recibe los mensajes en tu correo SIN servidor.
+    // 1) Entra a https://web3forms.com  2) escribe alberto.lira2312@gmail.com
+    // 3) te llega una "Access Key" por correo  4) pégala aquí abajo.
+    // Si lo dejas vacío, el formulario abre el correo del visitante (mailto) como respaldo.
+    formAccessKey: '',
     cvFile: 'assets/cv-alberto-lira.pdf'
   },
 
@@ -33,7 +38,7 @@ window.PORTFOLIO_DATA = {
       projects: { eyebrow: 'Portafolio', title: 'Proyectos & cosas que he hecho', subtitle: 'Una selección de sistemas y soluciones en las que he trabajado.', all: 'Todos', detail: 'Ver detalle' },
       whyme: { eyebrow: 'Por qué trabajar conmigo', title: 'Lo que me hace diferente', subtitle: 'No solo escribo código: resuelvo el problema de operación completo.' },
       cv: { eyebrow: 'Trayectoria', title: 'Currículum', subtitle: 'Mi experiencia y formación profesional.', download: 'Descargar CV (PDF)', experience: 'Experiencia', education: 'Educación', certs: 'Certificaciones & idiomas' },
-      contact: { eyebrow: 'Contacto', title: '¿Tienes un proyecto en mente?', lead: 'Cuéntame qué necesitas y con gusto te ayudo a llevarlo a la realidad. Respondo en menos de 24 horas.', name: 'Nombre', email: 'Correo', subject: 'Asunto', message: 'Mensaje', send: 'Enviar mensaje' },
+      contact: { eyebrow: 'Contacto', title: '¿Tienes un proyecto en mente?', lead: 'Cuéntame qué necesitas y con gusto te ayudo a llevarlo a la realidad. Respondo en menos de 24 horas.', name: 'Nombre', email: 'Correo', subject: 'Asunto', message: 'Mensaje', send: 'Enviar mensaje', sending: 'Enviando…', ok: '¡Mensaje enviado! Te responderé pronto.', err: 'No se pudo enviar. Escríbeme por WhatsApp o al correo directamente.' },
       modal: { challenge: 'El reto', solution: 'La solución', result: 'Resultado', features: 'Funcionalidades', view: 'Ver demo', code: 'Código', tech: 'Tecnologías' },
       quote: { eyebrow: 'Cotizador', title: 'Cotiza tu proyecto en segundos', subtitle: 'Elige el tipo de proyecto y lo que necesitas; te muestro un estimado al instante.', step1: '1. ¿Qué necesitas?', step2: '2. Agrega lo que apliques', estimate: 'Estimado aproximado', currency: 'MXN', cta: 'Pedir esta cotización por WhatsApp', note: 'Estimación orientativa. La cotización final depende del alcance y se acuerda contigo sin compromiso.', playLine: '¿Lo estás pensando? Mientras tanto, juega un rato 👇', play: 'Jugar', modeOnce: 'Pago único', modeRent: 'Renta mensual', weeks: 'Tiempo estimado', weeksUnit: 'semanas', breakdown: 'Desglose', base: 'Proyecto base', total: 'Total', perMonth: '/mes', rentNote: 'Renta mensual: incluye hosting, soporte y actualizaciones. Sin pago inicial fuerte.' },
       game: { title: 'Juega un rato', tetris: 'Tetris', sudoku: 'Sudoku', pick: 'Elige tu juego', score: 'Puntos', lines: 'Líneas', start: 'Jugar', pause: 'Pausa', over: '¡Fin del juego!', how: 'Flechas para mover/rotar · ↓ para bajar · o usa los botones', restart: 'Reiniciar', sNew: 'Nuevo', sErase: 'Borrar', sEasy: 'Fácil', sMed: 'Media', sHard: 'Difícil', sWin: '¡Resuelto! 🎉', sHow: 'Toca una celda y elige un número (1-9).' },
@@ -177,7 +182,7 @@ window.PORTFOLIO_DATA = {
       projects: { eyebrow: 'Portfolio', title: "Projects & things I've built", subtitle: "A selection of systems and solutions I've worked on.", all: 'All', detail: 'View details' },
       whyme: { eyebrow: 'Why work with me', title: 'What makes me different', subtitle: "I don't just write code: I solve the whole operational problem." },
       cv: { eyebrow: 'Career', title: 'Resume', subtitle: 'My professional experience and education.', download: 'Download CV (PDF)', experience: 'Experience', education: 'Education', certs: 'Certifications & languages' },
-      contact: { eyebrow: 'Contact', title: 'Got a project in mind?', lead: "Tell me what you need and I'll gladly help you make it happen. I reply within 24 hours.", name: 'Name', email: 'Email', subject: 'Subject', message: 'Message', send: 'Send message' },
+      contact: { eyebrow: 'Contact', title: 'Got a project in mind?', lead: "Tell me what you need and I'll gladly help you make it happen. I reply within 24 hours.", name: 'Name', email: 'Email', subject: 'Subject', message: 'Message', send: 'Send message', sending: 'Sending…', ok: "Message sent! I'll get back to you soon.", err: 'Could not send. Reach me on WhatsApp or by email directly.' },
       modal: { challenge: 'The challenge', solution: 'The solution', result: 'Result', features: 'Features', view: 'View demo', code: 'Code', tech: 'Technologies' },
       quote: { eyebrow: 'Quote', title: 'Get a quote in seconds', subtitle: 'Pick the project type and what you need; I show you an instant estimate.', step1: '1. What do you need?', step2: '2. Add what applies', estimate: 'Approximate estimate', currency: 'MXN', cta: 'Request this quote on WhatsApp', note: 'Indicative estimate. The final quote depends on scope and is agreed with you, no commitment.', playLine: 'Still thinking it over? Play a bit meanwhile 👇', play: 'Play', modeOnce: 'One-time', modeRent: 'Monthly rental', weeks: 'Estimated time', weeksUnit: 'weeks', breakdown: 'Breakdown', base: 'Base project', total: 'Total', perMonth: '/mo', rentNote: 'Monthly rental: includes hosting, support and updates. No large upfront payment.' },
       game: { title: 'Take a break', tetris: 'Tetris', sudoku: 'Sudoku', pick: 'Pick your game', score: 'Score', lines: 'Lines', start: 'Play', pause: 'Pause', over: 'Game over!', how: 'Arrows to move/rotate · ↓ to drop · or use the buttons', restart: 'Restart', sNew: 'New', sErase: 'Erase', sEasy: 'Easy', sMed: 'Medium', sHard: 'Hard', sWin: 'Solved! 🎉', sHow: 'Tap a cell and pick a number (1-9).' },
