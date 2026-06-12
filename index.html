@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es-MX" ng-app="portfolioApp">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portafolio profesional de Alberto Lira — Desarrollo de software, punto de venta, inventario, almacén (WMS), integraciones y soluciones a la medida." />
+  <meta name="author" content="Alberto Lira" />
+  <title>Alberto Lira — Desarrollador de Software & Soluciones</title>
+
+  <!-- Aplica el tema guardado antes de pintar (evita parpadeo) -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var dark = saved ? saved === 'dark'
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) { document.documentElement.setAttribute('data-theme', 'dark'); }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#0a1424" />
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+  <!-- IMPORTANTE: cambia https://alira2312.github.io/Repositorio por tu URL real al publicar -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Alberto Lira — Desarrollador de Software & Soluciones" />
+  <meta property="og:description" content="Sistemas a la medida: punto de venta, inventario, almacén (WMS) e integraciones. Del modelo de datos en SQL Server hasta la interfaz." />
+  <meta property="og:image" content="https://alira2312.github.io/Repositorio/assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://alira2312.github.io/Repositorio/" />
+  <meta property="og:locale" content="es_MX" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Alberto Lira — Desarrollador de Software & Soluciones" />
+  <meta name="twitter:description" content="Sistemas a la medida: punto de venta, inventario, almacén (WMS) e integraciones." />
+  <meta name="twitter:image" content="https://alira2312.github.io/Repositorio/assets/og-image.png" />
+
+  <!-- Bootstrap 5 + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body ng-controller="MainController" ng-cloak>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top app-navbar" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#inicio"><span class="brand-mark">AL</span> Alberto&nbsp;Lira</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+        aria-controls="navContent" aria-expanded="false" aria-label="Menú">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="#sobre-mi">{{ t.nav.about }}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#servicios">{{ t.nav.services }}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#proceso">{{ t.nav.process }}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#habilidades">{{ t.nav.skills }}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#proyectos">{{ t.nav.projects }}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#por-que">{{ t.nav.whyme }}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#cotizador">{{ t.nav.quote }}</a></li>
+          <li class="nav-item"><a class="nav-link" href="#cv">{{ t.nav.cv }}</a></li>
+          <li class="nav-item ms-lg-2">
+            <button type="button" class="theme-toggle" ng-click="toggleLang()" aria-label="Cambiar idioma" title="Español / English">
+              <span class="lang-label">{{ lang === 'en' ? 'ES' : 'EN' }}</span>
+            </button>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <button type="button" class="theme-toggle" ng-click="toggleTheme()" aria-label="Cambiar tema claro/oscuro" title="Tema claro/oscuro">
+              <i class="bi" ng-class="theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill'"></i>
+            </button>
+          </li>
+          <li class="nav-item ms-lg-2"><a class="btn btn-accent btn-sm px-3" href="#contacto">{{ t.nav.contact }}</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header id="inicio" class="hero d-flex align-items-center">
+    <div class="container position-relative">
+      <div class="row align-items-center">
+        <div class="col-lg-7 reveal is-visible">
+          <span class="badge-available mb-3"><span class="dot-pulse"></span> {{ profile.availability }}</span>
+          <p class="hero-eyebrow">{{ profile.role }}</p>
+          <h1 class="hero-title">{{ t.hero.greeting }} <span class="text-accent">{{ profile.name }}</span></h1>
+          <p class="hero-lead">{{ profile.tagline }}</p>
+          <div class="hero-actions">
+            <a href="#proyectos" class="btn btn-accent btn-lg me-2 mb-2"><i class="bi bi-collection me-1"></i> {{ t.hero.cta1 }}</a>
+            <a href="#contacto" class="btn btn-outline-light btn-lg mb-2"><i class="bi bi-envelope me-1"></i> {{ t.hero.cta2 }}</a>
+          </div>
+          <div class="hero-meta">
+            <span><i class="bi bi-geo-alt-fill"></i> {{ profile.location }}</span>
+            <span><i class="bi bi-person-fill"></i> {{ profile.age }} {{ t.hero.ageUnit }}</span>
+            <span><i class="bi bi-mortarboard-fill"></i> {{ profile.experienceYears }} {{ t.hero.years }}</span>
+          </div>
+        </div>
+        <div class="col-lg-5 text-center d-none d-lg-block reveal is-visible">
+          <div class="hero-illustration">
+            <img src="assets/img/code-window.svg" alt="Editor de código con un controlador de AngularJS" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="#sobre-mi" class="scroll-down" aria-label="Bajar"><i class="bi bi-chevron-double-down"></i></a>
+  </header>
+
+  <!-- ===================== STATS ===================== -->
+  <section class="stats-band">
+    <div class="container">
+      <div class="row text-center g-4">
+        <div class="col-6 col-md-3" ng-repeat="stat in stats" ng-class="{'stat-divider': $index % 4 !== 0}">
+          <div class="stat-number">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SOBRE MÍ ===================== -->
+  <section id="sobre-mi" class="py-section">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-5 reveal">
+          <div class="about-photo">
+            <img src="assets/img/sobre-mi.jpg" alt="Alberto Lira"
+              onerror="this.parentNode.classList.add('photo-fallback'); this.remove();" />
+            <div class="photo-badge"><i class="bi bi-patch-check-fill"></i> {{ profile.experienceYears }} {{ t.about.badge }}</div>
+          </div>
+        </div>
+        <div class="col-lg-7 reveal reveal-delay-1">
+          <span class="section-eyebrow">{{ t.about.eyebrow }}</span>
+          <h2 class="section-title">{{ t.about.title }}</h2>
+          <p class="lead-text" ng-repeat="p in profile.bio">{{ p }}</p>
+          <div class="row g-3 mt-2">
+            <div class="col-sm-6" ng-repeat="hl in profile.highlights">
+              <div class="highlight-item"><i class="bi {{ hl.icon }} text-accent"></i><span>{{ hl.text }}</span></div>
+            </div>
+          </div>
+          <a href="#contacto" class="btn btn-accent mt-4"><i class="bi bi-chat-dots me-1"></i> {{ t.about.cta }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SERVICIOS ===================== -->
+  <section id="servicios" class="py-section bg-soft">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <span class="section-eyebrow">{{ t.services.eyebrow }}</span>
+        <h2 class="section-title">{{ t.services.title }}</h2>
+        <p class="section-subtitle">{{ t.services.subtitle }}</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4 reveal" ng-class="'reveal-delay-' + ($index % 3)" ng-repeat="service in services">
+          <div class="service-card h-100">
+            <div class="service-icon"><i class="bi {{ service.icon }}"></i></div>
+            <h3 class="service-title">{{ service.title }}</h3>
+            <p class="service-desc">{{ service.desc }}</p>
+            <ul class="service-list">
+              <li ng-repeat="item in service.items"><i class="bi bi-check2 text-accent"></i> {{ item }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CÓMO TRABAJO ===================== -->
+  <section id="proceso" class="py-section process-section">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <span class="section-eyebrow text-light-accent">{{ t.process.eyebrow }}</span>
+        <h2 class="section-title text-white">{{ t.process.title }}</h2>
+        <p class="section-subtitle process-subtitle">{{ t.process.subtitle }}</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3 reveal" ng-class="'reveal-delay-' + ($index % 4)" ng-repeat="step in process">
+          <div class="process-card h-100">
+            <span class="process-step">{{ step.step }}</span>
+            <div class="process-icon"><i class="bi {{ step.icon }}"></i></div>
+            <h3 class="process-title">{{ step.title }}</h3>
+            <p class="process-desc">{{ step.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HABILIDADES ===================== -->
+  <section id="habilidades" class="py-section">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <span class="section-eyebrow">{{ t.skills.eyebrow }}</span>
+        <h2 class="section-title">{{ t.skills.title }}</h2>
+        <p class="section-subtitle">{{ t.skills.subtitle }}</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-lg-7 reveal">
+          <div ng-repeat="group in skillGroups" class="skill-group mb-4">
+            <h4 class="skill-group-title"><i class="bi {{ group.icon }} text-accent me-2"></i>{{ group.name }}</h4>
+            <div ng-repeat="skill in group.skills" class="skill-bar-wrap">
+              <div class="d-flex justify-content-between">
+                <span class="skill-name">{{ skill.name }}</span>
+                <span class="skill-pct">{{ skill.level }}%</span>
+              </div>
+              <div class="progress skill-progress">
+                <div class="progress-bar" role="progressbar" data-level="{{ skill.level }}"
+                  aria-valuenow="{{ skill.level }}" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 reveal reveal-delay-2">
+          <div class="tools-card">
+            <h4 class="skill-group-title mb-3"><i class="bi bi-tools text-accent me-2"></i>{{ t.skills.tools }}</h4>
+            <div class="tech-badges"><span class="tech-badge" ng-repeat="tool in tools">{{ tool }}</span></div>
+            <hr class="my-4 opacity-25" />
+            <h4 class="skill-group-title mb-3"><i class="bi bi-award text-accent me-2"></i>{{ t.skills.domains }}</h4>
+            <ul class="domain-list">
+              <li ng-repeat="d in domains"><i class="bi bi-dot text-accent"></i> {{ d }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROYECTOS ===================== -->
+  <section id="proyectos" class="py-section bg-soft">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <span class="section-eyebrow">{{ t.projects.eyebrow }}</span>
+        <h2 class="section-title">{{ t.projects.title }}</h2>
+        <p class="section-subtitle">{{ t.projects.subtitle }}</p>
+      </div>
+
+      <div class="text-center mb-4 project-filters reveal">
+        <button class="btn btn-filter" ng-class="{active: activeFilter === 'all'}" ng-click="setFilter('all')">{{ t.projects.all }}</button>
+        <button class="btn btn-filter" ng-repeat="cat in categories" ng-class="{active: activeFilter === cat}" ng-click="setFilter(cat)">{{ cat }}</button>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4 reveal" ng-class="'reveal-delay-' + ($index % 3)" ng-repeat="project in projects | filter: filterByCategory">
+          <div class="project-card h-100">
+            <div class="project-thumb" ng-click="openProject(project)" role="button">
+              <img ng-src="{{ project.image }}" alt="{{ project.title }}"
+                onerror="this.parentNode.classList.add('thumb-fallback'); this.remove();" />
+              <span class="thumb-icon"><i class="bi {{ project.icon }}"></i></span>
+              <span class="project-cat">{{ project.category }}</span>
+            </div>
+            <div class="project-body">
+              <h3 class="project-title">{{ project.title }}</h3>
+              <p class="project-desc">{{ project.desc }}</p>
+              <div class="project-tags"><span class="tag" ng-repeat="tag in project.tags">{{ tag }}</span></div>
+            </div>
+            <div class="project-footer">
+              <button class="btn btn-sm btn-accent" ng-click="openProject(project)"><i class="bi bi-eye me-1"></i> {{ t.projects.detail }}</button>
+              <a ng-if="project.repo" ng-href="{{ project.repo }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-dark"><i class="bi bi-github me-1"></i> {{ t.modal.code }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== POR QUÉ TRABAJAR CONMIGO ===================== -->
+  <section id="por-que" class="py-section">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <span class="section-eyebrow">{{ t.whyme.eyebrow }}</span>
+        <h2 class="section-title">{{ t.whyme.title }}</h2>
+        <p class="section-subtitle">{{ t.whyme.subtitle }}</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3 reveal" ng-class="'reveal-delay-' + ($index % 4)" ng-repeat="w in whyme">
+          <div class="why-card h-100">
+            <div class="why-icon"><i class="bi {{ w.icon }}"></i></div>
+            <h3 class="why-title">{{ w.title }}</h3>
+            <p class="why-desc">{{ w.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CV ===================== -->
+  <section id="cv" class="py-section bg-soft">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <span class="section-eyebrow">{{ t.cv.eyebrow }}</span>
+        <h2 class="section-title">{{ t.cv.title }}</h2>
+        <p class="section-subtitle">{{ t.cv.subtitle }}</p>
+        <a ng-href="{{ profile.cvFile }}" download class="btn btn-accent btn-lg mt-2"><i class="bi bi-file-earmark-arrow-down me-2"></i> {{ t.cv.download }}</a>
+      </div>
+      <div class="row g-5">
+        <div class="col-lg-6 reveal">
+          <h3 class="timeline-heading"><i class="bi bi-briefcase-fill text-accent me-2"></i>{{ t.cv.experience }}</h3>
+          <div class="timeline">
+            <div class="timeline-item" ng-repeat="exp in cv.experience">
+              <div class="timeline-dot"></div>
+              <span class="timeline-date">{{ exp.period }}</span>
+              <h4 class="timeline-title">{{ exp.role }}</h4>
+              <span class="timeline-org">{{ exp.org }}</span>
+              <p class="timeline-desc">{{ exp.desc }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 reveal reveal-delay-1">
+          <h3 class="timeline-heading"><i class="bi bi-mortarboard-fill text-accent me-2"></i>{{ t.cv.education }}</h3>
+          <div class="timeline">
+            <div class="timeline-item" ng-repeat="edu in cv.education">
+              <div class="timeline-dot"></div>
+              <span class="timeline-date">{{ edu.period }}</span>
+              <h4 class="timeline-title">{{ edu.title }}</h4>
+              <span class="timeline-org">{{ edu.org }}</span>
+              <p class="timeline-desc">{{ edu.desc }}</p>
+            </div>
+          </div>
+          <h3 class="timeline-heading mt-5"><i class="bi bi-patch-check-fill text-accent me-2"></i>{{ t.cv.certs }}</h3>
+          <ul class="cert-list">
+            <li ng-repeat="c in cv.certifications"><i class="bi bi-check-circle-fill text-accent me-2"></i>{{ c }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COTIZADOR ===================== -->
+  <section id="cotizador" class="py-section bg-soft">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <span class="section-eyebrow">{{ t.quote.eyebrow }}</span>
+        <h2 class="section-title">{{ t.quote.title }}</h2>
+        <p class="section-subtitle">{{ t.quote.subtitle }}</p>
+      </div>
+
+      <div class="row g-4 align-items-stretch">
+        <div class="col-lg-7 reveal">
+          <div class="quote-card">
+            <h4 class="quote-step">{{ t.quote.step1 }}</h4>
+            <div class="quote-types">
+              <button type="button" class="quote-type" ng-repeat="qt in quote.types"
+                ng-class="{active: quoteTypeKey === qt.key}" ng-click="selectQuoteType(qt.key)">
+                <i class="bi {{ qt.icon }}"></i><span>{{ qt.label }}</span>
+              </button>
+            </div>
+
+            <h4 class="quote-step mt-4">{{ t.quote.step2 }}</h4>
+            <div class="quote-addons">
+              <button type="button" class="quote-addon" ng-repeat="ad in quote.addons"
+                ng-class="{active: quoteAddons[ad.key]}" ng-click="toggleAddon(ad.key)">
+                <i class="bi" ng-class="quoteAddons[ad.key] ? 'bi-check-circle-fill' : 'bi-plus-circle'"></i>
+                <span>{{ ad.label }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5 reveal reveal-delay-1">
+          <div class="quote-result">
+            <div class="quote-mode">
+              <button type="button" ng-class="{active: quoteMode === 'once'}" ng-click="setQuoteMode('once')">{{ t.quote.modeOnce }}</button>
+              <button type="button" ng-class="{active: quoteMode === 'rent'}" ng-click="setQuoteMode('rent')">{{ t.quote.modeRent }}</button>
+            </div>
+
+            <ul class="quote-breakdown">
+              <li ng-repeat="it in quoteItems()"><span ng-class="{base: it.base}">{{ it.label }}</span><b>${{ it.price | number }}</b></li>
+            </ul>
+
+            <div class="quote-result-top">
+              <span class="quote-result-label">{{ quoteMode === 'rent' ? t.quote.modeRent : t.quote.estimate }}</span>
+              <div class="quote-amount" ng-if="quoteMode === 'once'">${{ quoteMin() | number }} <span>–</span> ${{ quoteMax() | number }}</div>
+              <div class="quote-amount" ng-if="quoteMode === 'rent'">${{ rentMonthly() | number }} <small>{{ t.quote.currency }}{{ t.quote.perMonth }}</small></div>
+              <span class="quote-currency" ng-if="quoteMode === 'once'">{{ t.quote.currency }}</span>
+            </div>
+
+            <div class="quote-weeks"><i class="bi bi-calendar3 me-1"></i>{{ t.quote.weeks }}: <b>{{ quoteWeeks() }}–{{ quoteWeeks() + 1 }} {{ t.quote.weeksUnit }}</b></div>
+
+            <p class="quote-note">{{ quoteMode === 'rent' ? t.quote.rentNote : t.quote.note }}</p>
+
+            <button class="btn btn-accent btn-lg w-100 mt-1" ng-click="quoteWhatsApp()"><i class="bi bi-whatsapp me-2"></i> {{ t.quote.cta }}</button>
+
+            <div class="quote-play">
+              <span>{{ t.quote.playLine }}</span>
+              <div class="play-buttons mt-2">
+                <button class="btn btn-play" ng-click="openGame('tetris')"><i class="bi bi-controller me-1"></i> {{ t.game.tetris }}</button>
+                <button class="btn btn-play" ng-click="openGame('sudoku')"><i class="bi bi-grid-3x3-gap-fill me-1"></i> {{ t.game.sudoku }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACTO ===================== -->
+  <section id="contacto" class="py-section contact-section">
+    <div class="container">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-5 reveal">
+          <span class="section-eyebrow text-light-accent">{{ t.contact.eyebrow }}</span>
+          <h2 class="section-title text-white">{{ t.contact.title }}</h2>
+          <p class="contact-lead">{{ t.contact.lead }}</p>
+          <ul class="contact-info">
+            <li><i class="bi bi-envelope-fill"></i> <a ng-href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>
+            <li><i class="bi bi-telephone-fill"></i> <a ng-href="tel:{{ profile.phoneRaw }}">{{ profile.phone }}</a></li>
+            <li><i class="bi bi-geo-alt-fill"></i> {{ profile.location }}</li>
+          </ul>
+          <div class="social-links">
+            <a ng-href="{{ profile.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="bi bi-github"></i></a>
+            <a ng-href="{{ profile.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            <a ng-href="{{ whatsappLink }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-7 reveal reveal-delay-1">
+          <div class="contact-card">
+            <form name="contactForm" ng-submit="sendMessage(contactForm.$valid)" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">{{ t.contact.name }}</label>
+                  <input type="text" class="form-control" name="name" ng-model="form.name" required ng-class="{'is-invalid': contactForm.name.$invalid && submitted}" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">{{ t.contact.email }}</label>
+                  <input type="email" class="form-control" name="email" ng-model="form.email" required ng-class="{'is-invalid': contactForm.email.$invalid && submitted}" />
+                </div>
+                <div class="col-12">
+                  <label class="form-label">{{ t.contact.subject }}</label>
+                  <input type="text" class="form-control" name="subject" ng-model="form.subject" required ng-class="{'is-invalid': contactForm.subject.$invalid && submitted}" />
+                </div>
+                <div class="col-12">
+                  <label class="form-label">{{ t.contact.message }}</label>
+                  <textarea class="form-control" rows="5" name="message" ng-model="form.message" required ng-class="{'is-invalid': contactForm.message.$invalid && submitted}"></textarea>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-accent btn-lg w-100"><i class="bi bi-send-fill me-2"></i> {{ t.contact.send }}</button>
+                </div>
+                <div class="col-12" ng-if="sent">
+                  <div class="alert alert-success mb-0"><i class="bi bi-check-circle-fill me-2"></i>{{ sentMessage }}</div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="app-footer">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <span class="footer-brand"><span class="brand-mark">AL</span> Alberto Lira</span>
+          <p class="footer-text mb-0">{{ profile.role }} — {{ profile.location }}</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+          <p class="footer-text mb-0">© {{ year }} Alberto Lira. {{ t.footer.rights }}</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== MODAL DETALLE DE PROYECTO ===================== -->
+  <div class="modal fade" id="projectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content project-modal" ng-if="selected">
+        <div class="modal-header">
+          <div>
+            <span class="project-cat-static">{{ selected.category }}</span>
+            <h3 class="modal-title mt-1">{{ selected.title }}</h3>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-thumb">
+            <img ng-src="{{ selected.image }}" alt="{{ selected.title }}" />
+          </div>
+          <div class="modal-block">
+            <h4 class="modal-h"><i class="bi bi-exclamation-diamond-fill text-accent me-2"></i>{{ t.modal.challenge }}</h4>
+            <p>{{ selected.problem }}</p>
+          </div>
+          <div class="modal-block">
+            <h4 class="modal-h"><i class="bi bi-lightbulb-fill text-accent me-2"></i>{{ t.modal.solution }}</h4>
+            <p>{{ selected.solution }}</p>
+          </div>
+          <div class="modal-block">
+            <h4 class="modal-h"><i class="bi bi-graph-up-arrow text-accent me-2"></i>{{ t.modal.result }}</h4>
+            <p>{{ selected.result }}</p>
+          </div>
+          <div class="modal-block">
+            <h4 class="modal-h"><i class="bi bi-list-check text-accent me-2"></i>{{ t.modal.features }}</h4>
+            <ul class="modal-features">
+              <li ng-repeat="f in selected.features"><i class="bi bi-check2 text-accent"></i> {{ f }}</li>
+            </ul>
+          </div>
+          <div class="modal-block">
+            <h4 class="modal-h"><i class="bi bi-cpu-fill text-accent me-2"></i>{{ t.modal.tech }}</h4>
+            <div class="project-tags"><span class="tag" ng-repeat="tag in selected.tags">{{ tag }}</span></div>
+          </div>
+        </div>
+        <div class="modal-footer" ng-if="selected.link || selected.repo">
+          <a ng-if="selected.link" ng-href="{{ selected.link }}" target="_blank" rel="noopener" class="btn btn-accent"><i class="bi bi-box-arrow-up-right me-1"></i> {{ t.modal.view }}</a>
+          <a ng-if="selected.repo" ng-href="{{ selected.repo }}" target="_blank" rel="noopener" class="btn btn-outline-dark"><i class="bi bi-github me-1"></i> {{ t.modal.code }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL JUEGO (TETRIS) ===================== -->
+  <div class="modal fade" id="gameModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content game-modal">
+        <div class="modal-header">
+          <h3 class="modal-title"><i class="bi bi-controller text-accent me-2"></i>{{ t.game.title }}</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Selector de juego -->
+          <div class="game-tabs">
+            <button id="tabTetris" type="button" class="game-tab active"><i class="bi bi-grid-1x2-fill me-1"></i> {{ t.game.tetris }}</button>
+            <button id="tabSudoku" type="button" class="game-tab"><i class="bi bi-grid-3x3-gap-fill me-1"></i> {{ t.game.sudoku }}</button>
+          </div>
+
+          <!-- Vista Tetris -->
+          <div id="tetrisView">
+            <div class="game-wrap">
+              <div class="game-board-wrap">
+                <canvas id="tetrisCanvas" width="240"></canvas>
+                <div id="tetOver" class="game-over"><span>{{ t.game.over }}</span>
+                  <button id="tetRestart" class="btn btn-accent btn-sm mt-2">{{ t.game.restart }}</button>
+                </div>
+              </div>
+              <div class="game-side">
+                <div class="game-stat"><span>{{ t.game.score }}</span><b id="tetScore">0</b></div>
+                <div class="game-stat"><span>{{ t.game.lines }}</span><b id="tetLines">0</b></div>
+                <button id="tetPause" class="btn btn-outline-dark btn-sm w-100 mt-2"><i class="bi bi-pause-fill"></i> {{ t.game.pause }}</button>
+                <p class="game-how">{{ t.game.how }}</p>
+              </div>
+            </div>
+            <div class="game-pad">
+              <button id="tetLeft" class="pad-btn" aria-label="Izquierda"><i class="bi bi-arrow-left"></i></button>
+              <button id="tetRotate" class="pad-btn" aria-label="Rotar"><i class="bi bi-arrow-clockwise"></i></button>
+              <button id="tetRight" class="pad-btn" aria-label="Derecha"><i class="bi bi-arrow-right"></i></button>
+              <button id="tetDown" class="pad-btn" aria-label="Bajar"><i class="bi bi-arrow-down"></i></button>
+              <button id="tetDrop" class="pad-btn" aria-label="Soltar"><i class="bi bi-chevron-bar-down"></i></button>
+            </div>
+          </div>
+
+          <!-- Vista Sudoku -->
+          <div id="sudokuView" class="d-none">
+            <div class="sudoku-toolbar">
+              <button type="button" class="sudoku-diff active" data-sud-diff="easy">{{ t.game.sEasy }}</button>
+              <button type="button" class="sudoku-diff" data-sud-diff="medium">{{ t.game.sMed }}</button>
+              <button type="button" class="sudoku-diff" data-sud-diff="hard">{{ t.game.sHard }}</button>
+            </div>
+            <div class="sudoku-board-wrap">
+              <div id="sudokuMount"></div>
+              <div id="sudWin" class="game-over"><span>{{ t.game.sWin }}</span></div>
+            </div>
+            <p class="game-how text-center">{{ t.game.sHow }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a ng-href="{{ whatsappLink }}" target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+  <a href="#inicio" class="back-to-top" aria-label="Volver arriba"><i class="bi bi-arrow-up"></i></a>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/tetris.js"></script>
+  <script src="js/sudoku.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CV — Alberto Lira</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a2233; background: #fff; font-size: 11px; line-height: 1.5; }
+  .page { width: 210mm; min-height: 297mm; margin: 0 auto; display: flex; }
+
+  /* Columna lateral */
+  .side { width: 68mm; background: linear-gradient(165deg, #0f1d33, #142544); color: #fff; padding: 16mm 9mm; }
+  .mono { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg,#d8b864,#c2a14d); color:#20180a; font-size: 24px; font-weight: 800; display:flex; align-items:center; justify-content:center; margin-bottom: 14px; }
+  .side h1 { font-size: 23px; line-height: 1.15; margin-bottom: 4px; }
+  .side .role { color: #d8b864; font-size: 11.5px; font-weight: 600; margin-bottom: 20px; }
+  .side h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #d8b864; margin: 18px 0 8px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 5px; }
+  .side .item { font-size: 10.5px; color: rgba(255,255,255,0.86); margin-bottom: 6px; word-break: break-word; }
+  .side .item b { color: #fff; font-weight: 600; display:block; font-size: 9px; text-transform: uppercase; letter-spacing: .5px; color:#9fb0d0; }
+  .bar-wrap { margin-bottom: 9px; }
+  .bar-top { display:flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; }
+  .bar { height: 5px; background: rgba(255,255,255,0.12); border-radius: 4px; overflow: hidden; }
+  .bar span { display:block; height:100%; background: linear-gradient(90deg,#9d8138,#d8b864); border-radius: 4px; }
+  .chips { display:flex; flex-wrap: wrap; gap: 5px; }
+  .chip { background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 3px 9px; font-size: 9.5px; }
+
+  /* Columna principal */
+  .main { flex: 1; padding: 16mm 11mm; }
+  .main h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #0f1d33; margin: 0 0 12px; display:flex; align-items:center; gap: 8px; }
+  .main h2::before { content:''; width: 18px; height: 3px; background: #c2a14d; display:inline-block; border-radius: 2px; }
+  .main h2:not(:first-child) { margin-top: 22px; }
+  .summary { color: #4b5667; font-size: 11px; }
+  .entry { margin-bottom: 14px; position: relative; padding-left: 16px; border-left: 2px solid #e7eaf0; }
+  .entry::before { content:''; position:absolute; left:-5px; top: 3px; width: 8px; height: 8px; border-radius:50%; background:#c2a14d; }
+  .entry .when { font-size: 9.5px; font-weight: 700; color: #9d8138; text-transform: uppercase; letter-spacing: .5px; }
+  .entry .title { font-size: 12.5px; font-weight: 700; color:#0f1d33; margin: 2px 0 1px; }
+  .entry .org { font-size: 10.5px; color:#667085; font-weight: 600; margin-bottom: 4px; }
+  .entry .desc { font-size: 10.5px; color:#4b5667; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <!-- Lateral -->
+    <aside class="side">
+      <div class="mono">AL</div>
+      <h1>Alberto Lira</h1>
+      <div class="role">Desarrollador de Software &amp; Soluciones</div>
+
+      <h2>Contacto</h2>
+      <div class="item"><b>Email</b>alberto.lira2312@gmail.com</div>
+      <div class="item"><b>Teléfono</b>+52 664 293 9122</div>
+      <div class="item"><b>Ubicación</b>México</div>
+      <div class="item"><b>Edad</b>27 años</div>
+      <div class="item"><b>GitHub</b>github.com/tu-usuario</div>
+      <div class="item"><b>LinkedIn</b>linkedin.com/in/tu-usuario</div>
+
+      <h2>Lenguajes</h2>
+      <div class="bar-wrap"><div class="bar-top"><span>C# / .NET</span><span>92%</span></div><div class="bar"><span style="width:92%"></span></div></div>
+      <div class="bar-wrap"><div class="bar-top"><span>SQL (T-SQL)</span><span>93%</span></div><div class="bar"><span style="width:93%"></span></div></div>
+      <div class="bar-wrap"><div class="bar-top"><span>JavaScript</span><span>90%</span></div><div class="bar"><span style="width:90%"></span></div></div>
+      <div class="bar-wrap"><div class="bar-top"><span>HTML / CSS</span><span>90%</span></div><div class="bar"><span style="width:90%"></span></div></div>
+      <div class="bar-wrap"><div class="bar-top"><span>PHP</span><span>75%</span></div><div class="bar"><span style="width:75%"></span></div></div>
+
+      <h2>Frameworks</h2>
+      <div class="chips">
+        <span class="chip">ASP.NET MVC</span><span class="chip">Web API</span><span class="chip">Angular</span>
+        <span class="chip">Bootstrap</span><span class="chip">Ionic</span><span class="chip">Node.js</span>
+      </div>
+
+      <h2>Herramientas</h2>
+      <div class="chips">
+        <span class="chip">SQL Server</span><span class="chip">Git</span><span class="chip">Visual Studio</span>
+        <span class="chip">Docker</span><span class="chip">IIS</span><span class="chip">Coolify</span>
+      </div>
+
+      <h2>Idiomas</h2>
+      <div class="item">Español — Nativo</div>
+      <div class="item">Inglés — Técnico / lectura</div>
+    </aside>
+
+    <!-- Principal -->
+    <main class="main">
+      <h2>Perfil profesional</h2>
+      <p class="summary">Desarrollador de software con foco en operaciones y logística. Especializado en sistemas de gestión de almacén (WMS), punto de venta, clasificación de inventario, fulfillment y reportería operativa. Trabajo el ciclo completo: diseño de base de datos, stored procedures, APIs e interfaces limpias y usables. Resuelvo problemas reales del piso de operación con software confiable.</p>
+
+      <h2>Experiencia</h2>
+      <div class="entry">
+        <div class="when">2022 — Presente</div>
+        <div class="title">Desarrollador de Software</div>
+        <div class="org">MI Technologies</div>
+        <div class="desc">Desarrollo y soporte de los sistemas core de almacén (BinManager, SmartControl, OrderClick/FFM). Diseño de base de datos, stored procedures, APIs y diagnóstico de operación en producción.</div>
+      </div>
+      <div class="entry">
+        <div class="when">20XX — 2022</div>
+        <div class="title">Desarrollador Web</div>
+        <div class="org">Empresa anterior</div>
+        <div class="desc">Desarrollo de aplicaciones web internas, puntos de venta y portales administrativos. (Edita con tu experiencia real.)</div>
+      </div>
+
+      <h2>Educación</h2>
+      <div class="entry">
+        <div class="when">20XX — 20XX</div>
+        <div class="title">Ingeniería en Sistemas Computacionales</div>
+        <div class="org">Universidad</div>
+        <div class="desc">Formación en desarrollo de software, bases de datos y arquitectura de sistemas. (Edita con tus datos reales.)</div>
+      </div>
+
+      <h2>Proyectos destacados</h2>
+      <div class="entry">
+        <div class="title">Punto de Venta — Boutique &amp; POS Donas/Café</div>
+        <div class="desc">Sistemas de punto de venta: catálogo, ventas, tickets, combos y corte de caja por turno.</div>
+      </div>
+      <div class="entry">
+        <div class="title">Gestor de Inventario &amp; Proceso de Almacén</div>
+        <div class="desc">Control de existencias, entradas/salidas, alertas de stock, recepción, conteos cíclicos y surtido con trazabilidad.</div>
+      </div>
+      <div class="entry">
+        <div class="title">Sistema de Ahorros</div>
+        <div class="desc">Registro y seguimiento de ahorros: metas, aportaciones, retiros y reportes de saldo.</div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+El botón "Descargar CV (PDF)" del sitio enlaza a:
+
+    assets/cv-alberto-lira.pdf
+
+Coloca aquí tu CV en PDF con EXACTAMENTE ese nombre y el botón funcionará.
+Si usas otro nombre, actualiza el enlace en index.html (sección #cv, atributo href).

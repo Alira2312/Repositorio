@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img" aria-label="Sistema de ahorros">
+  <defs><linearGradient id="ah" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#13243f"/><stop offset="1" stop-color="#0a1424"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#ah)"/>
+  <circle cx="640" cy="110" r="150" fill="#c2a14d" opacity="0.11"/>
+  <!-- alcancía -->
+  <g transform="translate(250,140)">
+    <ellipse cx="120" cy="90" rx="120" ry="86" fill="#1d3360"/>
+    <ellipse cx="120" cy="90" rx="120" ry="86" fill="none" stroke="#2b4470" stroke-width="2"/>
+    <circle cx="70" cy="78" r="9" fill="#0a1424"/>
+    <!-- ranura -->
+    <rect x="96" y="14" width="56" height="9" rx="4" fill="#0a1424"/>
+    <!-- patas -->
+    <rect x="40" y="168" width="24" height="22" rx="6" fill="#16294a"/><rect x="176" y="168" width="24" height="22" rx="6" fill="#16294a"/>
+    <!-- hocico -->
+    <ellipse cx="232" cy="96" rx="26" ry="22" fill="#24406f"/><circle cx="226" cy="92" r="4" fill="#0a1424"/><circle cx="238" cy="92" r="4" fill="#0a1424"/>
+    <!-- moneda cayendo -->
+    <circle cx="124" cy="-18" r="18" fill="#c2a14d"/><text x="124" y="-11" font-family="'Segoe UI',sans-serif" font-size="18" font-weight="800" fill="#20180a" text-anchor="middle">$</text>
+  </g>
+  <!-- flecha de crecimiento -->
+  <g transform="translate(120,180)">
+    <polyline points="0,120 50,80 90,100 150,30" fill="none" stroke="#d8b864" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M126 24 L156 22 L150 52 Z" fill="#d8b864"/>
+  </g>
+  <text x="400" y="430" font-family="'Segoe UI',sans-serif" font-size="26" font-weight="700" fill="#eaeefb" text-anchor="middle">Sistema de Ahorros</text>
+  <text x="400" y="458" font-family="'Segoe UI',sans-serif" font-size="15" fill="#7d8db0" text-anchor="middle">Metas · Aportaciones · Reportes de saldo</text>
+</svg>

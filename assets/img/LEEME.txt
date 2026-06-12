@@ -1,0 +1,21 @@
+IMÁGENES DEL SITIO
+==================
+
+Las ilustraciones de proyecto ya están incluidas como SVG (vectoriales, nítidas a
+cualquier tamaño y combinan con la paleta). Puedes reemplazarlas por capturas reales
+cuando quieras: solo conserva el mismo nombre, o cambia la ruta en js/data.js.
+
+Ilustraciones incluidas (SVG):
+  code-window.svg     -> editor de código (visual del Hero)
+  pos-boutique.svg    -> Punto de Venta — Boutique
+  pos-donas.svg       -> POS Donas & Café
+  ahorros.svg         -> Sistema de Ahorros
+  inventario.svg      -> Gestor de Inventario
+  almacen.svg         -> Proceso de Almacén
+
+Fotos tuyas (opcionales — el sitio funciona sin ellas):
+  sobre-mi.jpg        -> foto tuya para la sección "Sobre mí" (vertical, ~600x800)
+
+Para usar capturas reales en un proyecto: pon p. ej. pos-boutique.png en esta carpeta
+y cambia "image: 'assets/img/pos-boutique.svg'" por ".png" en js/data.js.
+Recomendado para capturas: 800x500 px (16:10).
