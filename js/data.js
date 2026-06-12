@@ -22,7 +22,7 @@ window.PORTFOLIO_DATA = {
     // 1) Entra a https://web3forms.com  2) escribe alberto.lira2312@gmail.com
     // 3) te llega una "Access Key" por correo  4) pégala aquí abajo.
     // Si lo dejas vacío, el formulario abre el correo del visitante (mailto) como respaldo.
-    formAccessKey: '',
+    formAccessKey: '7ef6fa08-3b44-4cf4-8516-f6859a726f54',
     cvFile: 'assets/cv-alberto-lira.pdf'
   },
 
