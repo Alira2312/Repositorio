@@ -14,8 +14,8 @@ window.PORTFOLIO_DATA = {
     phone: '+52 664 293 9122',
     phoneRaw: '+526642939122',
     whatsapp: '526642939122',                  // dígitos (lada país 52 + número)
-    github: 'https://github.com/tu-usuario',   // <-- tu GitHub
-    linkedin: 'https://www.linkedin.com/in/tu-usuario', // <-- tu LinkedIn
+    github: 'https://github.com/Alira2312',
+    linkedin: '',                              // sin LinkedIn (se oculta el ícono)
     experienceYears: '4',
     age: 27,
     cvFile: 'assets/cv-alberto-lira.pdf'
