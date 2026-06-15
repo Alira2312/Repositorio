@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es-MX" ng-app="demo">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo · Proceso de Almacén — Alberto Lira</title>
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/demo.css">
+</head>
+<body ng-controller="C" ng-cloak>
+<div class="backdrop" ng-class="{show:menu}" ng-click="menu=false"></div>
+<div class="app">
+  <aside class="sidebar" ng-class="{open:menu}">
+    <div class="sidebar-brand"><span class="brand-mark">AL</span> Almacén WMS</div>
+    <div class="sidebar-tag">Proceso</div>
+    <ul class="nav-list">
+      <li><button ng-class="{active:view=='home'}" ng-click="go('home')"><i class="bi bi-speedometer2"></i> Dashboard</button></li>
+      <li><button ng-class="{active:view=='rec'}" ng-click="go('rec')"><i class="bi bi-truck"></i> Recepción</button></li>
+      <li><button ng-class="{active:view=='put'}" ng-click="go('put')"><i class="bi bi-geo-alt"></i> Acomodo</button></li>
+      <li><button ng-class="{active:view=='count'}" ng-click="go('count')"><i class="bi bi-clipboard-check"></i> Conteos cíclicos</button></li>
+      <li><button ng-class="{active:view=='pick'}" ng-click="go('pick')"><i class="bi bi-box-seam"></i> Surtido</button></li>
+    </ul>
+    <div class="sidebar-foot"><a class="back-link" href="../index.html"><i class="bi bi-arrow-left"></i> Volver al portafolio</a></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" ng-click="menu=!menu"><i class="bi bi-list"></i></button>
+      <div><h1>{{ titles[view] }}</h1><div class="sub">Centro de distribución · Nave 2</div></div>
+      <div class="topbar-spacer"></div><span class="demo-pill">Demo</span><div class="avatar">AL</div>
+    </header>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div ng-if="view=='home'">
+        <div class="stat-grid">
+          <div class="stat"><div class="ic blue"><i class="bi bi-truck"></i></div><div class="val">{{ recPend() }}</div><div class="lbl">Pallets por recibir</div></div>
+          <div class="stat"><div class="ic amber"><i class="bi bi-geo-alt"></i></div><div class="val">{{ putPend() }}</div><div class="lbl">Por acomodar</div></div>
+          <div class="stat"><div class="ic green"><i class="bi bi-clipboard-check"></i></div><div class="val">{{ accuracy() }}%</div><div class="lbl">Exactitud de conteo</div></div>
+          <div class="stat"><div class="ic gold"><i class="bi bi-box-seam"></i></div><div class="val">{{ pickPct() }}%</div><div class="lbl">Surtido completado</div></div>
+        </div>
+        <div class="card"><div class="card-head"><h3>Flujo de operación</h3><div class="sub">Trazabilidad de punta a punta</div></div><div class="card-body">
+          <div class="flow">
+            <div class="flow-step"><span class="n">1</span><div style="font-size:1.5rem">🚚</div><b>Recepción</b><div class="sub">{{ recDone() }}/{{ pallets.length }} recibidos</div></div>
+            <div class="flow-step"><span class="n">2</span><div style="font-size:1.5rem">📍</div><b>Acomodo</b><div class="sub">{{ putDone() }} ubicados</div></div>
+            <div class="flow-step"><span class="n">3</span><div style="font-size:1.5rem">🔢</div><b>Conteo</b><div class="sub">{{ counted() }}/{{ locs.length }} contados</div></div>
+            <div class="flow-step"><span class="n">4</span><div style="font-size:1.5rem">📦</div><b>Surtido</b><div class="sub">{{ pickPct() }}% líneas</div></div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- RECEPCIÓN -->
+      <div ng-if="view=='rec'">
+        <div class="card"><div class="card-head"><h3>Pallets entrantes</h3><div class="sub">{{ recPend() }} pendientes de {{ pallets.length }}</div></div>
+          <table class="table"><thead><tr><th>Pallet</th><th>Proveedor</th><th>Producto</th><th>Cant.</th><th>Estado</th><th></th></tr></thead>
+          <tbody><tr ng-repeat="p in pallets"><td><b>{{ p.id }}</b></td><td>{{ p.prov }}</td><td>{{ p.sku }}</td><td class="num">{{ p.qty }}</td>
+            <td><span class="badge" ng-class="p.status=='Recibido'?'green':'gray'">{{ p.status }}</span></td>
+            <td><button class="btn btn-sm btn-gold" ng-if="p.status!='Recibido'" ng-click="receive(p)"><i class="bi bi-check2"></i> Recibir</button>
+                <span ng-if="p.status=='Recibido'" class="sub" style="color:var(--green)"><i class="bi bi-check-circle"></i> {{ p.time }}</span></td>
+          </tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- ACOMODO -->
+      <div ng-if="view=='put'">
+        <div class="card"><div class="card-head"><h3>Acomodo por ubicación</h3><div class="sub">Asigna ubicación a lo recibido</div></div>
+          <div ng-if="!toPut().length" class="empty"><i class="bi bi-check-circle" style="font-size:2rem;color:var(--green)"></i><p>Nada por acomodar. Recibe pallets en <b>Recepción</b>.</p></div>
+          <table class="table" ng-if="toPut().length"><thead><tr><th>Pallet</th><th>Producto</th><th>Cant.</th><th>Ubicación</th><th></th></tr></thead>
+          <tbody><tr ng-repeat="p in toPut()"><td><b>{{ p.id }}</b></td><td>{{ p.sku }}</td><td class="num">{{ p.qty }}</td>
+            <td><select class="input" style="max-width:140px" ng-model="p.loc"><option value="">—</option><option ng-repeat="l in locOptions">{{ l }}</option></select></td>
+            <td><button class="btn btn-sm btn-gold" ng-click="putAway(p)" ng-disabled="!p.loc"><i class="bi bi-geo-alt"></i> Acomodar</button></td>
+          </tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- CONTEOS -->
+      <div ng-if="view=='count'">
+        <div class="card"><div class="card-head"><h3>Conteos cíclicos</h3><div class="sub">Captura lo contado vs sistema</div></div>
+          <table class="table"><thead><tr><th>Ubicación</th><th>Producto</th><th>Sistema</th><th>Contado</th><th>Diferencia</th><th></th></tr></thead>
+          <tbody><tr ng-repeat="l in locs"><td><b>{{ l.loc }}</b></td><td>{{ l.sku }}</td><td class="num">{{ l.sys }}</td>
+            <td style="max-width:110px"><input class="input" type="number" ng-model="l.found" ng-disabled="l.done" placeholder="—"></td>
+            <td><span ng-if="l.done" class="badge" ng-class="l.found-l.sys==0?'green':'amber'">{{ (l.found-l.sys)>0?'+':'' }}{{ l.found-l.sys }}</span></td>
+            <td><button class="btn btn-sm" ng-class="l.done?'btn-ghost':'btn-gold'" ng-click="doCount(l)" ng-disabled="l.found==null"><i class="bi" ng-class="l.done?'bi-arrow-repeat':'bi-check2'"></i> {{ l.done?'Recontar':'Registrar' }}</button></td>
+          </tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- SURTIDO -->
+      <div ng-if="view=='pick'">
+        <div class="card" ng-repeat="o in orders"><div class="card-head"><h3>{{ o.id }} · {{ o.cliente }}</h3><div class="topbar-spacer"></div>
+          <span class="badge" ng-class="picked(o)==o.lines.length?'green':'amber'">{{ picked(o) }}/{{ o.lines.length }} líneas</span></div>
+          <table class="table"><thead><tr><th>Ubicación</th><th>Producto</th><th>Cant.</th><th></th></tr></thead>
+          <tbody><tr ng-repeat="ln in o.lines"><td><b>{{ ln.loc }}</b></td><td>{{ ln.sku }}</td><td class="num">{{ ln.qty }}</td>
+            <td><button class="btn btn-sm" ng-class="ln.ok?'btn-ghost':'btn-gold'" ng-click="ln.ok=!ln.ok">
+              <i class="bi" ng-class="ln.ok?'bi-check-circle-fill':'bi-circle'"></i> {{ ln.ok?'Surtido':'Surtir' }}</button></td>
+          </tr></tbody></table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="toast" ng-if="toast"><i class="bi bi-check-circle-fill" style="color:var(--accent-2)"></i> {{ toast }}</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+<script>
+angular.module('demo',[]).controller('C',['$scope','$timeout',function($s,$t){
+  $s.view='home';$s.menu=false;
+  $s.titles={home:'Dashboard',rec:'Recepción',put:'Acomodo',count:'Conteos cíclicos',pick:'Surtido'};
+  $s.go=function(v){$s.view=v;$s.menu=false};
+  $s.locOptions=['A-01-01','A-01-02','A-02-03','B-01-01','B-03-02','C-02-04'];
+  $s.pallets=[
+    {id:'PAL-501',prov:'Distribuidora Norte',sku:'Caja agua 24pz',qty:48,status:'Pendiente',loc:''},
+    {id:'PAL-502',prov:'Alimentos del Pacífico',sku:'Galletas surtidas',qty:120,status:'Pendiente',loc:''},
+    {id:'PAL-503',prov:'Distribuidora Norte',sku:'Refresco 600ml',qty:200,status:'Pendiente',loc:''},
+    {id:'PAL-504',prov:'Limpieza Total',sku:'Detergente 1kg',qty:60,status:'Pendiente',loc:''}
+  ];
+  $s.locs=[
+    {loc:'A-01-01',sku:'Caja agua 24pz',sys:48,found:null,done:false},
+    {loc:'A-02-03',sku:'Galletas surtidas',sys:120,found:null,done:false},
+    {loc:'B-01-01',sku:'Refresco 600ml',sys:200,found:null,done:false},
+    {loc:'C-02-04',sku:'Detergente 1kg',sys:60,found:null,done:false}
+  ];
+  $s.orders=[
+    {id:'OV-9001',cliente:'Tienda La Esquina',lines:[{loc:'A-01-01',sku:'Caja agua 24pz',qty:6,ok:false},{loc:'B-01-01',sku:'Refresco 600ml',qty:24,ok:false},{loc:'A-02-03',sku:'Galletas surtidas',qty:10,ok:false}]},
+    {id:'OV-9002',cliente:'Abarrotes Don Beto',lines:[{loc:'C-02-04',sku:'Detergente 1kg',qty:8,ok:false},{loc:'B-01-01',sku:'Refresco 600ml',qty:12,ok:false}]}
+  ];
+  function t(){var d=new Date();return d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}
+  $s.receive=function(p){p.status='Recibido';p.time=t();$s.flash(p.id+' recibido')};
+  $s.recDone=function(){return $s.pallets.filter(function(p){return p.status=='Recibido'}).length};
+  $s.recPend=function(){return $s.pallets.length-$s.recDone()};
+  $s.toPut=function(){return $s.pallets.filter(function(p){return p.status=='Recibido'})};
+  $s.putAway=function(p){if(!p.loc)return;p.status='Acomodado';$s.flash(p.id+' acomodado en '+p.loc)};
+  $s.putDone=function(){return $s.pallets.filter(function(p){return p.status=='Acomodado'}).length};
+  $s.putPend=function(){return $s.toPut().length};
+  $s.doCount=function(l){l.done=!l.done;if(l.done)$s.flash('Conteo registrado · '+l.loc)};
+  $s.counted=function(){return $s.locs.filter(function(l){return l.done}).length};
+  $s.accuracy=function(){var d=$s.locs.filter(function(l){return l.done});if(!d.length)return 100;
+    var ok=d.filter(function(l){return l.found-l.sys==0}).length;return Math.round(ok/d.length*100)};
+  $s.picked=function(o){return o.lines.filter(function(l){return l.ok}).length};
+  $s.pickPct=function(){var tot=0,ok=0;$s.orders.forEach(function(o){tot+=o.lines.length;ok+=$s.picked(o)});return tot?Math.round(ok/tot*100):0};
+  $s.flash=function(m){$s.toast=m;$t(function(){$s.toast=null},2600)};
+}]);
+</script>
+</body>
+</html>

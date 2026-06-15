@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es-MX" ng-app="demo">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo · POS Donas & Café — Alberto Lira</title>
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/demo.css">
+</head>
+<body ng-controller="C" ng-cloak>
+<div class="backdrop" ng-class="{show:menu}" ng-click="menu=false"></div>
+<div class="app">
+  <aside class="sidebar" ng-class="{open:menu}">
+    <div class="sidebar-brand"><span class="brand-mark">AL</span> Donas &amp; Café</div>
+    <div class="sidebar-tag">Menú</div>
+    <ul class="nav-list">
+      <li><button ng-class="{active:view=='pos'}" ng-click="go('pos')"><i class="bi bi-cup-hot"></i> Punto de venta</button></li>
+      <li><button ng-class="{active:view=='menu'}" ng-click="go('menu')"><i class="bi bi-card-list"></i> Menú</button></li>
+      <li><button ng-class="{active:view=='sales'}" ng-click="go('sales')"><i class="bi bi-receipt"></i> Ventas</button></li>
+      <li><button ng-class="{active:view=='cut'}" ng-click="go('cut')"><i class="bi bi-cash-coin"></i> Corte de caja</button></li>
+    </ul>
+    <div class="sidebar-foot"><a class="back-link" href="../index.html"><i class="bi bi-arrow-left"></i> Volver al portafolio</a></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" ng-click="menu=!menu"><i class="bi bi-list"></i></button>
+      <div><h1>{{ titles[view] }}</h1><div class="sub">Dulce Aroma · Turno matutino</div></div>
+      <div class="topbar-spacer"></div><span class="demo-pill">Demo</span><div class="avatar">AL</div>
+    </header>
+    <div class="content">
+
+      <!-- POS -->
+      <div ng-if="view=='pos'" class="pos">
+        <div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem">
+            <button class="btn btn-sm" ng-class="cat==c?'btn-gold':'btn-ghost'" ng-repeat="c in cats" ng-click="cat=c">{{ c }}</button>
+          </div>
+          <div class="prod-grid">
+            <div class="prod" ng-repeat="p in menu | filter:{cat:cat=='Todo'?'':cat}" ng-click="add(p)">
+              <div class="emoji">{{ p.emoji }}</div><div class="nm">{{ p.name }}</div>
+              <div class="pr">${{ p.price | number }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="cart card"><div class="card-body">
+          <h3 style="margin-bottom:.8rem"><i class="bi bi-bag"></i> Orden</h3>
+          <div ng-if="!cart.length" class="empty"><i class="bi bi-cup" style="font-size:2rem;opacity:.4"></i><p>Toca productos para armar la orden</p></div>
+          <div ng-repeat="it in cart" class="cart-item">
+            <div style="flex:1"><div style="font-weight:600">{{ it.p.name }}</div><div style="font-size:.78rem;color:var(--muted)">${{ it.p.price|number }}</div></div>
+            <div class="q"><button class="qbtn" ng-click="dec(it)">−</button><b>{{ it.qty }}</b><button class="qbtn" ng-click="inc(it)">+</button></div>
+            <div class="num" style="width:58px;text-align:right">${{ it.p.price*it.qty | number }}</div>
+          </div>
+          <div ng-if="cart.length" style="margin-top:1rem;border-top:1px solid var(--line);padding-top:.8rem">
+            <div class="total-row big"><span>Total</span><span>${{ total() | number }}</span></div>
+            <div class="field" style="margin-top:.6rem"><label>Pago con</label>
+              <select class="input" ng-model="pago"><option>Efectivo</option><option>Tarjeta</option></select></div>
+            <button class="btn btn-gold" style="width:100%;justify-content:center" ng-click="checkout()"><i class="bi bi-check2-circle"></i> Cobrar</button>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- MENU -->
+      <div ng-if="view=='menu'">
+        <div class="card"><div class="card-head"><h3>Menú</h3><div class="sub">{{ menu.length }} productos en {{ cats.length-1 }} categorías</div></div>
+          <table class="table"><thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th></tr></thead>
+          <tbody><tr ng-repeat="p in menu"><td><span style="font-size:1.1rem">{{ p.emoji }}</span> <b>{{ p.name }}</b></td>
+            <td><span class="badge gold">{{ p.cat }}</span></td><td class="num">${{ p.price|number }}</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- VENTAS -->
+      <div ng-if="view=='sales'">
+        <div class="card"><div class="card-head"><h3>Ventas del turno</h3><div class="sub">{{ sales.length }} órdenes</div></div>
+          <div ng-if="!sales.length" class="empty">Sin ventas aún. Cobra una orden en <b>Punto de venta</b>.</div>
+          <table class="table" ng-if="sales.length"><thead><tr><th>Folio</th><th>Hora</th><th>Items</th><th>Pago</th><th>Total</th></tr></thead>
+          <tbody><tr ng-repeat="s in sales"><td><b>#{{ s.folio }}</b></td><td>{{ s.time }}</td><td>{{ s.items }}</td>
+            <td><span class="badge" ng-class="s.pago=='Efectivo'?'green':'blue'">{{ s.pago }}</span></td><td class="num">${{ s.total|number }}</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- CORTE -->
+      <div ng-if="view=='cut'">
+        <div class="stat-grid">
+          <div class="stat"><div class="ic green"><i class="bi bi-cash"></i></div><div class="val">${{ byPago('Efectivo')+1240 | number }}</div><div class="lbl">Efectivo</div></div>
+          <div class="stat"><div class="ic blue"><i class="bi bi-credit-card"></i></div><div class="val">${{ byPago('Tarjeta')+860 | number }}</div><div class="lbl">Tarjeta</div></div>
+          <div class="stat"><div class="ic gold"><i class="bi bi-cash-stack"></i></div><div class="val">${{ total2()+2100 | number }}</div><div class="lbl">Total del turno</div></div>
+          <div class="stat"><div class="ic amber"><i class="bi bi-receipt"></i></div><div class="val">{{ sales.length+18 }}</div><div class="lbl">Órdenes</div></div>
+        </div>
+        <div class="card"><div class="card-body" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+          <div><h3>Cerrar turno</h3><div class="sub">Genera el corte Z y reinicia la caja para el siguiente turno.</div></div>
+          <button class="btn btn-gold" ng-click="flash('Corte Z generado correctamente')"><i class="bi bi-printer"></i> Generar corte Z</button>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="toast" ng-if="toast"><i class="bi bi-check-circle-fill" style="color:var(--accent-2)"></i> {{ toast }}</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+<script>
+angular.module('demo',[]).controller('C',['$scope','$timeout',function($s,$t){
+  $s.view='pos';$s.menu=false;$s.pago='Efectivo';$s.cat='Todo';
+  $s.titles={pos:'Punto de venta',menu:'Menú',sales:'Ventas',cut:'Corte de caja'};
+  $s.go=function(v){$s.view=v;$s.menu=false};
+  $s.cats=['Todo','Donas','Café','Combos','Frappés'];
+  $s.menu=[
+    {name:'Dona glaseada',cat:'Donas',price:22,emoji:'🍩'},{name:'Dona chocolate',cat:'Donas',price:25,emoji:'🍩'},
+    {name:'Dona rellena',cat:'Donas',price:28,emoji:'🍩'},{name:'Café americano',cat:'Café',price:35,emoji:'☕'},
+    {name:'Capuchino',cat:'Café',price:45,emoji:'☕'},{name:'Latte',cat:'Café',price:48,emoji:'☕'},
+    {name:'Combo 3 donas + café',cat:'Combos',price:95,emoji:'🥡'},{name:'Combo café + dona',cat:'Combos',price:60,emoji:'🥡'},
+    {name:'Frappé moka',cat:'Frappés',price:58,emoji:'🥤'},{name:'Frappé caramelo',cat:'Frappés',price:58,emoji:'🥤'}
+  ];
+  $s.cart=[];$s.sales=[];$s.folio=308;
+  $s.add=function(p){var it=$s.cart.filter(function(x){return x.p===p})[0];if(it){it.qty++}else{$s.cart.push({p:p,qty:1})}};
+  $s.inc=function(it){it.qty++};$s.dec=function(it){it.qty--;if(it.qty<=0)$s.cart.splice($s.cart.indexOf(it),1)};
+  $s.total=function(){return $s.cart.reduce(function(a,it){return a+it.p.price*it.qty},0)};
+  $s.checkout=function(){if(!$s.cart.length)return;var items=$s.cart.reduce(function(a,it){return a+it.qty},0);
+    var d=new Date();$s.sales.unshift({folio:$s.folio++,time:d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}),items:items,pago:$s.pago,total:$s.total()});
+    $s.cart=[];$s.flash('Orden cobrada ('+$s.pago+')')};
+  $s.byPago=function(p){return $s.sales.filter(function(s){return s.pago==p}).reduce(function(a,s){return a+s.total},0)};
+  $s.total2=function(){return $s.sales.reduce(function(a,s){return a+s.total},0)};
+  $s.flash=function(m){$s.toast=m;$t(function(){$s.toast=null},2600)};
+}]);
+</script>
+</body>
+</html>

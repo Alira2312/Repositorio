@@ -1,0 +1,131 @@
+/* =========================================================
+   demo.css — Shell compartido para los demos (estilo admin).
+   Mismo lenguaje visual que el portafolio: navy + dorado, redondeado.
+   ========================================================= */
+:root{
+  --navy:#0a1424; --navy-2:#0f1d33; --navy-3:#16294a;
+  --ink:#131a26; --muted:#667085; --line:#e7eaf0; --line-2:#eef1f6;
+  --paper:#ffffff; --soft:#f4f7fc;
+  --accent:#c2a14d; --accent-2:#d8b864; --accent-deep:#9d8138; --accent-soft:rgba(194,161,77,.12);
+  --green:#1a9c5b; --green-soft:#e7f7ee; --red:#e0564f; --red-soft:#fdecea; --amber:#e0a52e; --amber-soft:#fdf3e0;
+  --blue:#3a6fd8; --blue-soft:#eaf1fd;
+  --radius:16px; --radius-sm:11px; --shadow:0 10px 30px rgba(16,24,40,.08); --shadow-sm:0 4px 14px rgba(16,24,40,.06);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',system-ui,sans-serif;background:var(--soft);color:var(--ink);font-size:14.5px}
+h1,h2,h3,h4,h5{font-family:'Sora','Inter',sans-serif;letter-spacing:-.01em;margin:0}
+a{text-decoration:none;color:inherit}
+[ng-cloak]{display:none!important}
+
+/* ---------- Layout ---------- */
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:262px;flex-shrink:0;background:linear-gradient(170deg,#0a1424,#10203a 60%,#16294a);
+  color:#fff;display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:40;
+  transition:transform .3s var(--ease);
+}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:1.4rem 1.4rem;font-family:'Sora';font-weight:800;font-size:1.05rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.brand-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#20180a;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem}
+.sidebar-tag{font-size:.72rem;color:var(--accent-2);font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:1rem 1.4rem .4rem}
+.nav-list{list-style:none;margin:0;padding:.2rem .8rem;flex:1;overflow-y:auto}
+.nav-list li>button{
+  width:100%;display:flex;align-items:center;gap:.8rem;background:transparent;border:none;color:rgba(255,255,255,.74);
+  font-size:.92rem;font-weight:500;padding:.7rem .85rem;border-radius:11px;cursor:pointer;transition:all .2s var(--ease);text-align:left;margin-bottom:.15rem
+}
+.nav-list li>button i{font-size:1.15rem;width:22px;text-align:center}
+.nav-list li>button:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-list li>button.active{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#20180a;font-weight:600;box-shadow:0 6px 16px rgba(194,161,77,.3)}
+.sidebar-foot{padding:1rem 1.2rem;border-top:1px solid rgba(255,255,255,.07)}
+.back-link{display:flex;align-items:center;gap:.6rem;color:rgba(255,255,255,.7);font-size:.85rem;padding:.5rem;border-radius:10px;transition:.2s}
+.back-link:hover{background:rgba(255,255,255,.07);color:#fff}
+
+.main{flex:1;margin-left:262px;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  background:var(--paper);border-bottom:1px solid var(--line);padding:.9rem 1.6rem;display:flex;align-items:center;gap:1rem;
+  position:sticky;top:0;z-index:30
+}
+.topbar h1{font-size:1.25rem}
+.topbar .sub{color:var(--muted);font-size:.85rem}
+.topbar-spacer{flex:1}
+.demo-pill{background:var(--accent-soft);color:var(--accent-deep);font-size:.72rem;font-weight:700;padding:.3rem .8rem;border-radius:50px;text-transform:uppercase;letter-spacing:.5px}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#20180a;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;font-family:'Sora'}
+.menu-btn{display:none;background:none;border:none;font-size:1.5rem;color:var(--navy);cursor:pointer}
+.content{padding:1.8rem 1.6rem;max-width:1240px;width:100%}
+
+/* ---------- Componentes ---------- */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.1rem;margin-bottom:1.6rem}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:1.3rem 1.4rem;box-shadow:var(--shadow-sm);transition:.3s var(--ease)}
+.stat:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.stat .ic{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin-bottom:.8rem}
+.ic.gold{background:var(--accent-soft);color:var(--accent-deep)} .ic.green{background:var(--green-soft);color:var(--green)}
+.ic.blue{background:var(--blue-soft);color:var(--blue)} .ic.amber{background:var(--amber-soft);color:var(--amber)} .ic.red{background:var(--red-soft);color:var(--red)}
+.stat .val{font-family:'Sora';font-size:1.7rem;font-weight:800;line-height:1}
+.stat .lbl{color:var(--muted);font-size:.85rem;margin-top:.3rem}
+.stat .trend{font-size:.78rem;font-weight:600;margin-top:.5rem}
+.trend.up{color:var(--green)} .trend.down{color:var(--red)}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);margin-bottom:1.4rem;overflow:hidden}
+.card-head{padding:1.1rem 1.4rem;border-bottom:1px solid var(--line-2);display:flex;align-items:center;gap:.8rem}
+.card-head h3{font-size:1.05rem} .card-head .sub{color:var(--muted);font-size:.82rem}
+.card-body{padding:1.3rem 1.4rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+
+.table{width:100%;border-collapse:collapse}
+.table th{text-align:left;font-size:.74rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;padding:.7rem 1rem;border-bottom:1px solid var(--line)}
+.table td{padding:.8rem 1rem;border-bottom:1px solid var(--line-2);font-size:.9rem}
+.table tbody tr{transition:.15s} .table tbody tr:hover{background:var(--soft)}
+.table tr:last-child td{border-bottom:none}
+.num{font-variant-numeric:tabular-nums;font-weight:600}
+
+.badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.74rem;font-weight:700;padding:.22rem .65rem;border-radius:50px}
+.badge.green{background:var(--green-soft);color:var(--green)} .badge.red{background:var(--red-soft);color:var(--red)}
+.badge.amber{background:var(--amber-soft);color:var(--amber)} .badge.blue{background:var(--blue-soft);color:var(--blue)}
+.badge.gray{background:#eef1f6;color:var(--muted)} .badge.gold{background:var(--accent-soft);color:var(--accent-deep)}
+
+.btn{border:none;border-radius:50px;font-weight:600;font-size:.9rem;padding:.55rem 1.2rem;cursor:pointer;transition:.25s var(--ease);display:inline-flex;align-items:center;gap:.4rem}
+.btn-gold{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#20180a;box-shadow:0 6px 16px rgba(194,161,77,.3)}
+.btn-gold:hover{transform:translateY(-2px)}
+.btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--ink)} .btn-ghost:hover{border-color:var(--accent)}
+.btn-sm{padding:.35rem .8rem;font-size:.82rem}
+.btn-icon{width:34px;height:34px;padding:0;justify-content:center;border-radius:9px}
+
+.field{margin-bottom:.9rem} .field label{display:block;font-size:.82rem;font-weight:600;margin-bottom:.3rem;color:var(--ink)}
+.input,select.input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:.6rem .8rem;font-size:.9rem;font-family:inherit;background:#fff;transition:.2s}
+.input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* barras de progreso / mini charts */
+.bar{height:9px;background:var(--line);border-radius:50px;overflow:hidden}
+.bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--accent-deep),var(--accent-2));border-radius:50px;transition:width .8s var(--ease)}
+.chart{display:flex;align-items:flex-end;gap:.6rem;height:180px;padding-top:1rem}
+.chart .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:.5rem;height:100%}
+.chart .bar-v{width:100%;max-width:46px;background:linear-gradient(180deg,var(--accent-2),var(--accent));border-radius:8px 8px 0 0;margin-top:auto;transition:height .8s var(--ease)}
+.chart .col small{color:var(--muted);font-size:.74rem}
+
+/* POS */
+.pos{display:grid;grid-template-columns:1fr 360px;gap:1.4rem;align-items:start}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.9rem}
+.prod{background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:1rem;cursor:pointer;transition:.2s var(--ease);text-align:center}
+.prod:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--accent)}
+.prod .emoji{font-size:2rem} .prod .nm{font-weight:600;font-size:.88rem;margin:.4rem 0 .1rem} .prod .pr{color:var(--accent-deep);font-weight:700}
+.cart{position:sticky;top:90px}
+.cart-item{display:flex;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px dashed var(--line)}
+.cart-item .q{display:flex;align-items:center;gap:.4rem}
+.qbtn{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700}
+.total-row{display:flex;justify-content:space-between;padding:.3rem 0;color:var(--muted)} .total-row.big{font-size:1.3rem;font-weight:800;color:var(--ink);font-family:'Sora'}
+
+.empty{text-align:center;color:var(--muted);padding:2rem 1rem}
+.flow{display:flex;gap:.8rem;flex-wrap:wrap}
+.flow-step{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:1rem;position:relative}
+.flow-step .n{position:absolute;top:.6rem;right:.8rem;font-family:'Sora';font-weight:800;color:var(--accent-soft);font-size:1.5rem}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:.8rem 1.2rem;border-radius:12px;box-shadow:var(--shadow);z-index:60;display:flex;align-items:center;gap:.6rem;animation:pop .3s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+@media(max-width:880px){
+  .sidebar{transform:translateX(-100%)} .sidebar.open{transform:none}
+  .main{margin-left:0} .menu-btn{display:block} .pos{grid-template-columns:1fr} .grid-2,.grid-3{grid-template-columns:1fr}
+  .cart{position:static}
+}
+.backdrop{display:none;position:fixed;inset:0;background:rgba(10,20,36,.5);z-index:35}
+.backdrop.show{display:block}

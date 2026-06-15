@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es-MX" ng-app="demo">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo · Sistema de Ahorros — Alberto Lira</title>
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/demo.css">
+</head>
+<body ng-controller="C" ng-cloak>
+<div class="backdrop" ng-class="{show:menu}" ng-click="menu=false"></div>
+<div class="app">
+  <aside class="sidebar" ng-class="{open:menu}">
+    <div class="sidebar-brand"><span class="brand-mark">AL</span> Mis Ahorros</div>
+    <div class="sidebar-tag">Menú</div>
+    <ul class="nav-list">
+      <li><button ng-class="{active:view=='home'}" ng-click="go('home')"><i class="bi bi-piggy-bank"></i> Resumen</button></li>
+      <li><button ng-class="{active:view=='goals'}" ng-click="go('goals')"><i class="bi bi-flag"></i> Metas</button></li>
+      <li><button ng-class="{active:view=='mov'}" ng-click="go('mov')"><i class="bi bi-arrow-left-right"></i> Movimientos</button></li>
+      <li><button ng-class="{active:view=='rep'}" ng-click="go('rep')"><i class="bi bi-graph-up"></i> Reportes</button></li>
+    </ul>
+    <div class="sidebar-foot"><a class="back-link" href="../index.html"><i class="bi bi-arrow-left"></i> Volver al portafolio</a></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" ng-click="menu=!menu"><i class="bi bi-list"></i></button>
+      <div><h1>{{ titles[view] }}</h1><div class="sub">Cuenta personal de ahorro</div></div>
+      <div class="topbar-spacer"></div><span class="demo-pill">Demo</span><div class="avatar">AL</div>
+    </header>
+    <div class="content">
+
+      <!-- RESUMEN -->
+      <div ng-if="view=='home'">
+        <div class="stat-grid">
+          <div class="stat"><div class="ic gold"><i class="bi bi-wallet2"></i></div><div class="val">${{ totalSaved() | number }}</div><div class="lbl">Ahorro total</div><div class="trend up"><i class="bi bi-arrow-up"></i> +${{ thisMonth | number }} este mes</div></div>
+          <div class="stat"><div class="ic green"><i class="bi bi-bullseye"></i></div><div class="val">{{ pctGlobal() }}%</div><div class="lbl">Avance de metas</div></div>
+          <div class="stat"><div class="ic blue"><i class="bi bi-flag"></i></div><div class="val">{{ goals.length }}</div><div class="lbl">Metas activas</div></div>
+          <div class="stat"><div class="ic amber"><i class="bi bi-calendar-check"></i></div><div class="val">${{ targetTotal()-totalSaved() | number }}</div><div class="lbl">Falta para completar</div></div>
+        </div>
+        <div class="card"><div class="card-head"><h3>Progreso por meta</h3></div><div class="card-body">
+          <div ng-repeat="g in goals" style="margin-bottom:1.1rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:.35rem"><span><b>{{ g.icon }} {{ g.name }}</b></span><span class="num">${{ g.saved|number }} / ${{ g.target|number }}</span></div>
+            <div class="bar"><span style="width:{{ pct(g) }}%"></span></div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- METAS -->
+      <div ng-if="view=='goals'">
+        <div class="grid-3">
+          <div class="card" ng-repeat="g in goals"><div class="card-body" style="text-align:center">
+            <div style="font-size:2.2rem">{{ g.icon }}</div>
+            <h3 style="margin:.4rem 0">{{ g.name }}</h3>
+            <div class="num" style="font-size:1.3rem;color:var(--accent-deep)">${{ g.saved|number }}</div>
+            <div class="sub" style="color:var(--muted);font-size:.82rem">de ${{ g.target|number }}</div>
+            <div class="bar" style="margin:.7rem 0"><span style="width:{{ pct(g) }}%"></span></div>
+            <span class="badge" ng-class="pct(g)>=100?'green':'gold'">{{ pct(g) }}%</span>
+          </div></div>
+        </div>
+        <div class="card"><div class="card-head"><h3>Registrar aportación</h3></div><div class="card-body">
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end">
+            <div class="field" style="flex:1;min-width:160px;margin:0"><label>Meta</label>
+              <select class="input" ng-model="f.goal"><option ng-repeat="g in goals" value="{{$index}}">{{ g.icon }} {{ g.name }}</option></select></div>
+            <div class="field" style="flex:1;min-width:140px;margin:0"><label>Monto (MXN)</label><input class="input" type="number" ng-model="f.amount" placeholder="500"></div>
+            <button class="btn btn-gold" ng-click="aportar()"><i class="bi bi-plus-circle"></i> Aportar</button>
+            <button class="btn btn-ghost" ng-click="retirar()"><i class="bi bi-dash-circle"></i> Retirar</button>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- MOVIMIENTOS -->
+      <div ng-if="view=='mov'">
+        <div class="card"><div class="card-head"><h3>Historial de movimientos</h3><div class="sub">{{ movs.length }} registros</div></div>
+          <table class="table"><thead><tr><th>Fecha</th><th>Meta</th><th>Tipo</th><th>Monto</th></tr></thead>
+          <tbody><tr ng-repeat="m in movs"><td>{{ m.date }}</td><td>{{ m.goal }}</td>
+            <td><span class="badge" ng-class="m.type=='Aportación'?'green':'red'"><i class="bi" ng-class="m.type=='Aportación'?'bi-arrow-down':'bi-arrow-up'"></i> {{ m.type }}</span></td>
+            <td class="num" ng-style="{color:m.type=='Aportación'?'var(--green)':'var(--red)'}">{{ m.type=='Aportación'?'+':'−' }}${{ m.amount|number }}</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- REPORTES -->
+      <div ng-if="view=='rep'">
+        <div class="card"><div class="card-head"><h3>Ahorro acumulado por mes</h3></div><div class="card-body">
+          <div class="chart"><div class="col" ng-repeat="d in months"><div class="bar-v" style="height:{{ d.v }}%"></div><small>{{ d.l }}</small></div></div>
+        </div></div>
+        <div class="grid-2">
+          <div class="stat"><div class="ic green"><i class="bi bi-graph-up-arrow"></i></div><div class="val">${{ avgMonth | number }}</div><div class="lbl">Promedio mensual</div></div>
+          <div class="stat"><div class="ic gold"><i class="bi bi-trophy"></i></div><div class="val">{{ completed() }}</div><div class="lbl">Metas completadas</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="toast" ng-if="toast"><i class="bi bi-check-circle-fill" style="color:var(--accent-2)"></i> {{ toast }}</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+<script>
+angular.module('demo',[]).controller('C',['$scope','$timeout',function($s,$t){
+  $s.view='home';$s.menu=false;$s.f={goal:'0',amount:null};$s.thisMonth=3200;$s.avgMonth=2850;
+  $s.titles={home:'Resumen',goals:'Metas',mov:'Movimientos',rep:'Reportes'};
+  $s.go=function(v){$s.view=v;$s.menu=false};
+  $s.goals=[
+    {name:'Fondo de emergencia',icon:'🛟',saved:18000,target:30000},
+    {name:'Vacaciones',icon:'🏖️',saved:9500,target:15000},
+    {name:'Laptop nueva',icon:'💻',saved:12000,target:22000},
+    {name:'Enganche auto',icon:'🚗',saved:40000,target:80000}
+  ];
+  $s.months=[{l:'Ene',v:40},{l:'Feb',v:52},{l:'Mar',v:60},{l:'Abr',v:68},{l:'May',v:80},{l:'Jun',v:100}];
+  $s.movs=[
+    {date:'05/jun',goal:'Fondo de emergencia',type:'Aportación',amount:1500},
+    {date:'03/jun',goal:'Vacaciones',type:'Aportación',amount:1000},
+    {date:'28/may',goal:'Laptop nueva',type:'Retiro',amount:500},
+    {date:'25/may',goal:'Enganche auto',type:'Aportación',amount:3000}
+  ];
+  $s.pct=function(g){return Math.min(100,Math.round(g.saved/g.target*100))};
+  $s.totalSaved=function(){return $s.goals.reduce(function(a,g){return a+g.saved},0)};
+  $s.targetTotal=function(){return $s.goals.reduce(function(a,g){return a+g.target},0)};
+  $s.pctGlobal=function(){return Math.round($s.totalSaved()/$s.targetTotal()*100)};
+  $s.completed=function(){return $s.goals.filter(function(g){return g.saved>=g.target}).length};
+  function move(type){var g=$s.goals[+$s.f.goal],amt=+$s.f.amount;if(!g||!amt||amt<=0)return;
+    if(type=='Aportación')g.saved+=amt;else g.saved=Math.max(0,g.saved-amt);
+    var d=new Date();$s.movs.unshift({date:d.getDate()+'/'+['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][d.getMonth()],goal:g.name,type:type,amount:amt});
+    $s.f.amount=null;$s.flash(type+' registrada');}
+  $s.aportar=function(){move('Aportación')};$s.retirar=function(){move('Retiro')};
+  $s.flash=function(m){$s.toast=m;$t(function(){$s.toast=null},2600)};
+}]);
+</script>
+</body>
+</html>

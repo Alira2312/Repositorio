@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es-MX" ng-app="demo">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo · POS Boutique — Alberto Lira</title>
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/demo.css">
+</head>
+<body ng-controller="C" ng-cloak>
+<div class="backdrop" ng-class="{show:menu}" ng-click="menu=false"></div>
+<div class="app">
+  <aside class="sidebar" ng-class="{open:menu}">
+    <div class="sidebar-brand"><span class="brand-mark">AL</span> POS Boutique</div>
+    <div class="sidebar-tag">Menú</div>
+    <ul class="nav-list">
+      <li><button ng-class="{active:view=='pos'}" ng-click="go('pos')"><i class="bi bi-bag-check"></i> Punto de venta</button></li>
+      <li><button ng-class="{active:view=='prod'}" ng-click="go('prod')"><i class="bi bi-tags"></i> Productos</button></li>
+      <li><button ng-class="{active:view=='sales'}" ng-click="go('sales')"><i class="bi bi-receipt"></i> Ventas</button></li>
+      <li><button ng-class="{active:view=='rep'}" ng-click="go('rep')"><i class="bi bi-graph-up"></i> Reportes</button></li>
+    </ul>
+    <div class="sidebar-foot"><a class="back-link" href="../index.html"><i class="bi bi-arrow-left"></i> Volver al portafolio</a></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" ng-click="menu=!menu"><i class="bi bi-list"></i></button>
+      <div><h1>{{ titles[view] }}</h1><div class="sub">Boutique La Moda · Sucursal Centro</div></div>
+      <div class="topbar-spacer"></div>
+      <span class="demo-pill">Demo</span>
+      <div class="avatar">AL</div>
+    </header>
+    <div class="content">
+
+      <!-- ===== POS ===== -->
+      <div ng-if="view=='pos'" class="pos">
+        <div>
+          <div class="card"><div class="card-body">
+            <input class="input" ng-model="q" placeholder="🔎 Buscar prenda...">
+          </div></div>
+          <div class="prod-grid">
+            <div class="prod" ng-repeat="p in products | filter:q" ng-click="add(p)">
+              <div class="emoji">{{ p.emoji }}</div>
+              <div class="nm">{{ p.name }}</div>
+              <div style="font-size:.74rem;color:var(--muted)">{{ p.variant }}</div>
+              <div class="pr">${{ p.price | number }}</div>
+              <div style="font-size:.72rem;margin-top:.3rem" ng-class="p.stock>5?'':'text-danger'">Stock: {{ p.stock }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="cart card"><div class="card-body">
+          <h3 style="margin-bottom:.8rem"><i class="bi bi-cart3"></i> Carrito</h3>
+          <div ng-if="!cart.length" class="empty"><i class="bi bi-cart-x" style="font-size:2rem;opacity:.4"></i><p>Agrega prendas para vender</p></div>
+          <div ng-repeat="it in cart" class="cart-item">
+            <div style="flex:1"><div style="font-weight:600">{{ it.p.name }}</div><div style="font-size:.78rem;color:var(--muted)">${{ it.p.price|number }} c/u</div></div>
+            <div class="q"><button class="qbtn" ng-click="dec(it)">−</button><b>{{ it.qty }}</b><button class="qbtn" ng-click="inc(it)">+</button></div>
+            <div class="num" style="width:64px;text-align:right">${{ it.p.price*it.qty | number }}</div>
+          </div>
+          <div ng-if="cart.length" style="margin-top:1rem;border-top:1px solid var(--line);padding-top:.8rem">
+            <div class="total-row"><span>Subtotal</span><span class="num">${{ subtotal() | number }}</span></div>
+            <div class="total-row"><span>IVA 16%</span><span class="num">${{ subtotal()*0.16 | number:0 }}</span></div>
+            <div class="total-row big"><span>Total</span><span>${{ subtotal()*1.16 | number:0 }}</span></div>
+            <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:.8rem" ng-click="checkout()"><i class="bi bi-check2-circle"></i> Cobrar e imprimir ticket</button>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- ===== PRODUCTOS ===== -->
+      <div ng-if="view=='prod'">
+        <div class="card"><div class="card-head"><h3>Catálogo</h3><div class="sub">{{ products.length }} prendas · variantes por talla y color</div></div>
+          <table class="table">
+            <thead><tr><th>Prenda</th><th>Variante</th><th>Precio</th><th>Stock</th><th>Estado</th></tr></thead>
+            <tbody><tr ng-repeat="p in products">
+              <td><span style="font-size:1.1rem">{{ p.emoji }}</span> <b>{{ p.name }}</b></td>
+              <td>{{ p.variant }}</td><td class="num">${{ p.price|number }}</td><td class="num">{{ p.stock }}</td>
+              <td><span class="badge" ng-class="p.stock>5?'green':(p.stock>0?'amber':'red')">{{ p.stock>5?'En stock':(p.stock>0?'Bajo':'Agotado') }}</span></td>
+            </tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== VENTAS ===== -->
+      <div ng-if="view=='sales'">
+        <div class="card"><div class="card-head"><h3>Tickets de venta</h3><div class="sub">{{ sales.length }} ventas registradas</div></div>
+          <div ng-if="!sales.length" class="empty">Aún no hay ventas. Ve a <b>Punto de venta</b> y cobra una.</div>
+          <table class="table" ng-if="sales.length">
+            <thead><tr><th>Folio</th><th>Fecha</th><th>Artículos</th><th>Total</th><th></th></tr></thead>
+            <tbody><tr ng-repeat="s in sales">
+              <td><b>#{{ s.folio }}</b></td><td>{{ s.date }}</td><td>{{ s.items }} pza</td>
+              <td class="num">${{ s.total | number:0 }}</td><td><span class="badge green"><i class="bi bi-check"></i> Pagado</span></td>
+            </tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== REPORTES ===== -->
+      <div ng-if="view=='rep'">
+        <div class="stat-grid">
+          <div class="stat"><div class="ic gold"><i class="bi bi-cash-stack"></i></div><div class="val">${{ totalVendido() | number:0 }}</div><div class="lbl">Vendido (demo)</div><div class="trend up"><i class="bi bi-arrow-up"></i> +12% vs ayer</div></div>
+          <div class="stat"><div class="ic green"><i class="bi bi-receipt"></i></div><div class="val">{{ sales.length + 24 }}</div><div class="lbl">Tickets</div><div class="trend up"><i class="bi bi-arrow-up"></i> +5</div></div>
+          <div class="stat"><div class="ic blue"><i class="bi bi-people"></i></div><div class="val">{{ ((totalVendido()+18400)/(sales.length+24)) | number:0 }}</div><div class="lbl">Ticket promedio</div></div>
+          <div class="stat"><div class="ic amber"><i class="bi bi-box-seam"></i></div><div class="val">{{ lowStock() }}</div><div class="lbl">Prendas por reabastecer</div></div>
+        </div>
+        <div class="card"><div class="card-head"><h3>Ventas de la semana</h3></div><div class="card-body">
+          <div class="chart"><div class="col" ng-repeat="d in week">
+            <div class="bar-v" style="height:{{ d.v }}%"></div><small>{{ d.l }}</small>
+          </div></div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="toast" ng-if="toast"><i class="bi bi-check-circle-fill" style="color:var(--accent-2)"></i> {{ toast }}</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+<script>
+angular.module('demo',[]).controller('C',['$scope','$timeout',function($s,$t){
+  $s.view='pos'; $s.menu=false;
+  $s.titles={pos:'Punto de venta',prod:'Productos',sales:'Ventas',rep:'Reportes'};
+  $s.go=function(v){$s.view=v;$s.menu=false};
+  $s.products=[
+    {name:'Blusa floral',variant:'M · Beige',price:399,stock:12,emoji:'👚'},
+    {name:'Playera básica',variant:'CH · Negro',price:249,stock:30,emoji:'👕'},
+    {name:'Pantalón mezclilla',variant:'30 · Azul',price:699,stock:8,emoji:'👖'},
+    {name:'Vestido casual',variant:'M · Rojo',price:899,stock:4,emoji:'👗'},
+    {name:'Chamarra',variant:'G · Café',price:1199,stock:3,emoji:'🧥'},
+    {name:'Falda plisada',variant:'CH · Negro',price:459,stock:0,emoji:'👗'},
+    {name:'Tenis urbanos',variant:'26 · Blanco',price:1290,stock:6,emoji:'👟'},
+    {name:'Bolsa de mano',variant:'Único · Camel',price:780,stock:9,emoji:'👜'}
+  ];
+  $s.cart=[]; $s.sales=[]; $s.folio=1042;
+  $s.week=[{l:'Lun',v:55},{l:'Mar',v:70},{l:'Mié',v:48},{l:'Jue',v:82},{l:'Vie',v:95},{l:'Sáb',v:100},{l:'Dom',v:38}];
+  $s.add=function(p){ if(p.stock<=0)return; var it=$s.cart.filter(function(x){return x.p===p})[0]; if(it){it.qty++}else{$s.cart.push({p:p,qty:1})} };
+  $s.inc=function(it){it.qty++}; $s.dec=function(it){it.qty--; if(it.qty<=0)$s.cart.splice($s.cart.indexOf(it),1)};
+  $s.subtotal=function(){return $s.cart.reduce(function(a,it){return a+it.p.price*it.qty},0)};
+  $s.checkout=function(){ if(!$s.cart.length)return;
+    var items=$s.cart.reduce(function(a,it){return a+it.qty},0), total=$s.subtotal()*1.16;
+    $s.cart.forEach(function(it){it.p.stock=Math.max(0,it.p.stock-it.qty)});
+    var d=new Date();
+    $s.sales.unshift({folio:$s.folio++,date:d.toLocaleDateString('es-MX')+' '+d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}),items:items,total:total});
+    $s.cart=[]; $s.flash('Venta cobrada · ticket impreso');
+  };
+  $s.totalVendido=function(){return $s.sales.reduce(function(a,s){return a+s.total},0)};
+  $s.lowStock=function(){return $s.products.filter(function(p){return p.stock<=5}).length};
+  $s.flash=function(m){$s.toast=m;$t(function(){$s.toast=null},2600)};
+}]);
+</script>
+</body>
+</html>

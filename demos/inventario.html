@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es-MX" ng-app="demo">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo · Gestor de Inventario — Alberto Lira</title>
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/demo.css">
+</head>
+<body ng-controller="C" ng-cloak>
+<div class="backdrop" ng-class="{show:menu}" ng-click="menu=false"></div>
+<div class="app">
+  <aside class="sidebar" ng-class="{open:menu}">
+    <div class="sidebar-brand"><span class="brand-mark">AL</span> Inventario</div>
+    <div class="sidebar-tag">Menú</div>
+    <ul class="nav-list">
+      <li><button ng-class="{active:view=='home'}" ng-click="go('home')"><i class="bi bi-speedometer2"></i> Dashboard</button></li>
+      <li><button ng-class="{active:view=='stock'}" ng-click="go('stock')"><i class="bi bi-boxes"></i> Existencias</button></li>
+      <li><button ng-class="{active:view=='mov'}" ng-click="go('mov')"><i class="bi bi-arrow-down-up"></i> Entradas / Salidas</button></li>
+      <li><button ng-class="{active:view=='alert'}" ng-click="go('alert')"><i class="bi bi-exclamation-triangle"></i> Alertas <span ng-if="low().length" class="badge red" style="margin-left:auto">{{ low().length }}</span></button></li>
+    </ul>
+    <div class="sidebar-foot"><a class="back-link" href="../index.html"><i class="bi bi-arrow-left"></i> Volver al portafolio</a></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" ng-click="menu=!menu"><i class="bi bi-list"></i></button>
+      <div><h1>{{ titles[view] }}</h1><div class="sub">Almacén Central · Tijuana</div></div>
+      <div class="topbar-spacer"></div><span class="demo-pill">Demo</span><div class="avatar">AL</div>
+    </header>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div ng-if="view=='home'">
+        <div class="stat-grid">
+          <div class="stat"><div class="ic blue"><i class="bi bi-upc-scan"></i></div><div class="val">{{ items.length }}</div><div class="lbl">SKUs activos</div></div>
+          <div class="stat"><div class="ic gold"><i class="bi bi-cash-stack"></i></div><div class="val">${{ value() | number:0 }}</div><div class="lbl">Valor del inventario</div></div>
+          <div class="stat"><div class="ic green"><i class="bi bi-arrow-down-up"></i></div><div class="val">{{ kardex.length }}</div><div class="lbl">Movimientos hoy</div></div>
+          <div class="stat"><div class="ic red"><i class="bi bi-exclamation-triangle"></i></div><div class="val">{{ low().length }}</div><div class="lbl">Alertas de bajo stock</div></div>
+        </div>
+        <div class="card"><div class="card-head"><h3>Existencias por categoría</h3></div><div class="card-body">
+          <div class="chart"><div class="col" ng-repeat="c in cats"><div class="bar-v" style="height:{{ c.v }}%"></div><small>{{ c.l }}</small></div></div>
+        </div></div>
+      </div>
+
+      <!-- EXISTENCIAS -->
+      <div ng-if="view=='stock'">
+        <div class="card"><div class="card-head"><h3>Existencias</h3><div class="topbar-spacer"></div><input class="input" style="max-width:240px" ng-model="q" placeholder="🔎 Buscar..."></div>
+          <table class="table"><thead><tr><th>SKU</th><th>Producto</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Estado</th></tr></thead>
+          <tbody><tr ng-repeat="it in items | filter:q">
+            <td><span class="num" style="color:var(--muted)">{{ it.sku }}</span></td><td><b>{{ it.name }}</b></td>
+            <td><span class="badge gray">{{ it.cat }}</span></td><td class="num">{{ it.stock }}</td><td class="num">{{ it.min }}</td>
+            <td><span class="badge" ng-class="it.stock==0?'red':(it.stock<=it.min?'amber':'green')">{{ it.stock==0?'Agotado':(it.stock<=it.min?'Bajo':'OK') }}</span></td>
+          </tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- MOVIMIENTOS -->
+      <div ng-if="view=='mov'">
+        <div class="card"><div class="card-head"><h3>Registrar movimiento</h3></div><div class="card-body">
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end">
+            <div class="field" style="flex:2;min-width:200px;margin:0"><label>Producto</label>
+              <select class="input" ng-model="f.item"><option ng-repeat="it in items" value="{{$index}}">{{ it.sku }} · {{ it.name }} (stock {{ it.stock }})</option></select></div>
+            <div class="field" style="flex:1;min-width:120px;margin:0"><label>Cantidad</label><input class="input" type="number" ng-model="f.qty" placeholder="10"></div>
+            <button class="btn btn-gold" ng-click="move('Entrada')"><i class="bi bi-box-arrow-in-down"></i> Entrada</button>
+            <button class="btn btn-ghost" ng-click="move('Salida')"><i class="bi bi-box-arrow-up"></i> Salida</button>
+          </div>
+        </div></div>
+        <div class="card"><div class="card-head"><h3>Kardex</h3><div class="sub">{{ kardex.length }} movimientos</div></div>
+          <div ng-if="!kardex.length" class="empty">Sin movimientos. Registra una entrada o salida arriba.</div>
+          <table class="table" ng-if="kardex.length"><thead><tr><th>Hora</th><th>Producto</th><th>Tipo</th><th>Cant.</th><th>Stock final</th></tr></thead>
+          <tbody><tr ng-repeat="k in kardex"><td>{{ k.time }}</td><td>{{ k.name }}</td>
+            <td><span class="badge" ng-class="k.type=='Entrada'?'green':'amber'">{{ k.type }}</span></td>
+            <td class="num">{{ k.type=='Entrada'?'+':'−' }}{{ k.qty }}</td><td class="num">{{ k.end }}</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- ALERTAS -->
+      <div ng-if="view=='alert'">
+        <div class="card"><div class="card-head"><h3><i class="bi bi-exclamation-triangle text-danger"></i> Productos por reabastecer</h3><div class="sub">Stock en o por debajo del mínimo</div></div>
+          <div ng-if="!low().length" class="empty"><i class="bi bi-check-circle" style="font-size:2rem;color:var(--green)"></i><p>Todo en orden. Ningún producto bajo el mínimo.</p></div>
+          <table class="table" ng-if="low().length"><thead><tr><th>SKU</th><th>Producto</th><th>Stock</th><th>Mínimo</th><th>Sugerido</th></tr></thead>
+          <tbody><tr ng-repeat="it in low()"><td class="num" style="color:var(--muted)">{{ it.sku }}</td><td><b>{{ it.name }}</b></td>
+            <td><span class="badge" ng-class="it.stock==0?'red':'amber'">{{ it.stock }}</span></td><td class="num">{{ it.min }}</td>
+            <td class="num" style="color:var(--green)">+{{ (it.min*2-it.stock) }}</td></tr></tbody></table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="toast" ng-if="toast"><i class="bi bi-check-circle-fill" style="color:var(--accent-2)"></i> {{ toast }}</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+<script>
+angular.module('demo',[]).controller('C',['$scope','$timeout',function($s,$t){
+  $s.view='home';$s.menu=false;$s.f={item:'0',qty:null};
+  $s.titles={home:'Dashboard',stock:'Existencias',mov:'Entradas / Salidas',alert:'Alertas'};
+  $s.go=function(v){$s.view=v;$s.menu=false};
+  $s.items=[
+    {sku:'SKU-1001',name:'Cuaderno profesional',cat:'Papelería',stock:128,min:40,price:32},
+    {sku:'SKU-1002',name:'Bolígrafo negro',cat:'Papelería',stock:14,min:50,price:8},
+    {sku:'SKU-1003',name:'Mochila escolar',cat:'Mochilas',stock:0,min:10,price:420},
+    {sku:'SKU-1004',name:'Calculadora científica',cat:'Electrónica',stock:36,min:15,price:185},
+    {sku:'SKU-1005',name:'Marcadores (set)',cat:'Papelería',stock:9,min:20,price:75},
+    {sku:'SKU-1006',name:'Audífonos',cat:'Electrónica',stock:52,min:20,price:240},
+    {sku:'SKU-1007',name:'Engrapadora',cat:'Oficina',stock:23,min:10,price:95}
+  ];
+  $s.cats=[{l:'Papelería',v:90},{l:'Electrónica',v:70},{l:'Mochilas',v:20},{l:'Oficina',v:45}];
+  $s.kardex=[];
+  $s.value=function(){return $s.items.reduce(function(a,i){return a+i.stock*i.price},0)};
+  $s.low=function(){return $s.items.filter(function(i){return i.stock<=i.min})};
+  $s.move=function(type){var it=$s.items[+$s.f.item],q=+$s.f.qty;if(!it||!q||q<=0)return;
+    if(type=='Entrada')it.stock+=q;else it.stock=Math.max(0,it.stock-q);
+    var d=new Date();$s.kardex.unshift({time:d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}),name:it.name,type:type,qty:q,end:it.stock});
+    $s.f.qty=null;$s.flash(type+' registrada · '+it.name)};
+  $s.flash=function(m){$s.toast=m;$t(function(){$s.toast=null},2600)};
+}]);
+</script>
+</body>
+</html>

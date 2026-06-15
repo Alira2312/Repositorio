@@ -89,7 +89,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'Punto de Venta — Boutique', category: 'Punto de Venta', icon: 'bi-bag-heart', image: 'assets/img/pos-boutique.svg',
         desc: 'Sistema de punto de venta para boutique de ropa: catálogo por tallas y colores, ventas, tickets, control de caja y descuentos.',
-        tags: ['POS', 'Ventas', 'Inventario', 'Tickets'], link: '', repo: '',
+        tags: ['POS', 'Ventas', 'Inventario', 'Tickets'], link: 'demos/pos-boutique.html', repo: '',
         problem: 'La boutique llevaba ventas e inventario a mano, con errores de stock por talla/color y cortes de caja lentos.',
         solution: 'Construí un POS con catálogo por variantes (talla/color), cobro rápido, impresión de ticket y descuento de inventario en tiempo real.',
         result: 'Cobros más rápidos, inventario confiable por variante y cortes de caja en minutos en lugar de horas.',
@@ -98,7 +98,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'POS Donas & Café', category: 'Punto de Venta', icon: 'bi-cup-hot', image: 'assets/img/pos-donas.svg',
         desc: 'Punto de venta para cafetería/dulcería: menú de productos, combos, ventas rápidas en mostrador y corte de caja por turno.',
-        tags: ['POS', 'Menú', 'Combos', 'Corte de caja'], link: '', repo: '',
+        tags: ['POS', 'Menú', 'Combos', 'Corte de caja'], link: 'demos/pos-cafe.html', repo: '',
         problem: 'En mostrador necesitaban cobrar muy rápido en hora pico y armar combos sin equivocarse en el precio.',
         solution: 'Desarrollé un POS táctil con menú visual, combos predefinidos y atajos para las ventas más comunes.',
         result: 'Filas más ágiles, menos errores de cobro y un corte de caja claro al cerrar el turno.',
@@ -107,7 +107,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'Sistema de Ahorros', category: 'Finanzas', icon: 'bi-piggy-bank', image: 'assets/img/ahorros.svg',
         desc: 'Aplicación para registrar y dar seguimiento a ahorros: metas, aportaciones, retiros y reportes de saldo por usuario.',
-        tags: ['Finanzas', 'Metas', 'Reportes'], link: '', repo: '',
+        tags: ['Finanzas', 'Metas', 'Reportes'], link: 'demos/ahorros.html', repo: '',
         problem: 'Llevar el control de ahorros y aportaciones en hojas de cálculo era confuso y propenso a errores.',
         solution: 'Creé una app donde cada usuario registra aportaciones y retiros, define metas y ve su saldo y avance.',
         result: 'Transparencia total del saldo, historial de movimientos y metas con porcentaje de avance.',
@@ -116,7 +116,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'Gestor de Inventario', category: 'Inventario', icon: 'bi-clipboard-data', image: 'assets/img/inventario.svg',
         desc: 'Gestor de inventario: control de existencias, entradas y salidas, kardex y alertas automáticas por bajo stock.',
-        tags: ['Inventario', 'Existencias', 'Alertas'], link: '', repo: '',
+        tags: ['Inventario', 'Existencias', 'Alertas'], link: 'demos/inventario.html', repo: '',
         problem: 'No había visibilidad real de existencias y se compraba de más o se quedaban sin producto clave.',
         solution: 'Implementé un gestor con kardex de entradas/salidas, niveles mínimos y alertas automáticas de reorden.',
         result: 'Stock confiable, menos quiebres de inventario y compras basadas en datos, no en suposiciones.',
@@ -125,7 +125,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'Proceso de Almacén', category: 'Inventario', icon: 'bi-box-seam', image: 'assets/img/almacen.svg',
         desc: 'Sistema de proceso de almacén: recepción, acomodo, conteos cíclicos y surtido, con trazabilidad de movimientos.',
-        tags: ['Almacén', 'Conteos', 'Surtido', 'Trazabilidad'], link: '', repo: '',
+        tags: ['Almacén', 'Conteos', 'Surtido', 'Trazabilidad'], link: 'demos/almacen.html', repo: '',
         problem: 'El flujo de almacén (recibir, acomodar, surtir) no estaba estandarizado y se perdía la trazabilidad.',
         solution: 'Diseñé un proceso digital de recepción, acomodo por ubicación, conteos cíclicos y surtido con registro de cada movimiento.',
         result: 'Trazabilidad de punta a punta, conteos más exactos y un flujo de almacén ordenado y medible.',
@@ -233,7 +233,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'Point of Sale — Boutique', category: 'Point of Sale', icon: 'bi-bag-heart', image: 'assets/img/pos-boutique.svg',
         desc: 'POS system for a clothing boutique: catalog by size and color, sales, receipts, cash control and discounts.',
-        tags: ['POS', 'Sales', 'Inventory', 'Receipts'], link: '', repo: '',
+        tags: ['POS', 'Sales', 'Inventory', 'Receipts'], link: 'demos/pos-boutique.html', repo: '',
         problem: 'The boutique tracked sales and inventory by hand, with stock errors per size/color and slow cash closeouts.',
         solution: 'I built a POS with variant catalog (size/color), fast checkout, receipt printing and real-time inventory deduction.',
         result: 'Faster checkouts, reliable inventory per variant and cash closeouts in minutes instead of hours.',
@@ -242,7 +242,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'POS Donuts & Coffee', category: 'Point of Sale', icon: 'bi-cup-hot', image: 'assets/img/pos-donas.svg',
         desc: 'POS for a café/sweets shop: product menu, combos, fast counter sales and cash closeout per shift.',
-        tags: ['POS', 'Menu', 'Combos', 'Cash closeout'], link: '', repo: '',
+        tags: ['POS', 'Menu', 'Combos', 'Cash closeout'], link: 'demos/pos-cafe.html', repo: '',
         problem: 'At the counter they needed to charge very fast at peak hours and build combos without pricing mistakes.',
         solution: 'I developed a touch POS with a visual menu, predefined combos and shortcuts for the most common sales.',
         result: 'Faster lines, fewer pricing errors and a clear cash closeout at the end of the shift.',
@@ -251,7 +251,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'Savings System', category: 'Finance', icon: 'bi-piggy-bank', image: 'assets/img/ahorros.svg',
         desc: 'App to record and track savings: goals, deposits, withdrawals and balance reports per user.',
-        tags: ['Finance', 'Goals', 'Reports'], link: '', repo: '',
+        tags: ['Finance', 'Goals', 'Reports'], link: 'demos/ahorros.html', repo: '',
         problem: 'Tracking savings and deposits in spreadsheets was confusing and error-prone.',
         solution: 'I built an app where each user records deposits and withdrawals, sets goals and sees their balance and progress.',
         result: 'Full balance transparency, movement history and goals with progress percentage.',
@@ -260,7 +260,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'Inventory Manager', category: 'Inventory', icon: 'bi-clipboard-data', image: 'assets/img/inventario.svg',
         desc: 'Inventory manager: stock control, inbound/outbound, kardex and automatic low-stock alerts.',
-        tags: ['Inventory', 'Stock', 'Alerts'], link: '', repo: '',
+        tags: ['Inventory', 'Stock', 'Alerts'], link: 'demos/inventario.html', repo: '',
         problem: 'There was no real stock visibility, so they over-bought or ran out of key products.',
         solution: 'I implemented a manager with inbound/outbound kardex, minimum levels and automatic reorder alerts.',
         result: 'Reliable stock, fewer stockouts and data-driven purchasing instead of guesswork.',
@@ -269,7 +269,7 @@ window.PORTFOLIO_DATA = {
       {
         title: 'Warehouse Process', category: 'Inventory', icon: 'bi-box-seam', image: 'assets/img/almacen.svg',
         desc: 'Warehouse process system: receiving, put-away, cycle counts and picking, with movement traceability.',
-        tags: ['Warehouse', 'Counts', 'Picking', 'Traceability'], link: '', repo: '',
+        tags: ['Warehouse', 'Counts', 'Picking', 'Traceability'], link: 'demos/almacen.html', repo: '',
         problem: 'The warehouse flow (receive, put away, pick) was not standardized and traceability was lost.',
         solution: 'I designed a digital process for receiving, location put-away, cycle counts and picking, logging every movement.',
         result: 'End-to-end traceability, more accurate counts and an orderly, measurable warehouse flow.',
